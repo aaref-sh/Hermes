@@ -1,6 +1,12 @@
 ﻿namespace Hermes.Domain.Entities;
 
-public abstract class BaseEntity
+public interface IBaseEntity
+{
+    Guid Guid { get; set; }
+    int Id { get; set; }
+}
+
+public abstract class BaseEntity : IBaseEntity
 {
     public int Id { get; set; }
     public Guid Guid { get; set; } = Guid.NewGuid();

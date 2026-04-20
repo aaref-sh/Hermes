@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Hermes.Infrastructure.Repositories;
 
 public abstract class GenericRepository<T>(HermesDbContext context) : IGenericRepository<T>
-    where T : BaseEntity
+    where T : class, IBaseEntity
 {
     protected readonly HermesDbContext Context = context;
 

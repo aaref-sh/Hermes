@@ -1,8 +1,9 @@
-﻿using System.Linq.Expressions;
+﻿using Hermes.Domain.Entities;
+using System.Linq.Expressions;
 
 namespace Hermes.Domain.Interfaces;
 
-public interface IGenericRepository<T> where T : class
+public interface IGenericRepository<T> where T : IBaseEntity
 {
     /// <summary>
     /// Retrieves an entity by its ID.

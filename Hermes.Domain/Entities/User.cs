@@ -1,13 +1,12 @@
-﻿namespace Hermes.Domain.Entities;
+﻿using Microsoft.AspNetCore.Identity;
 
-public class User : BaseEntity
+namespace Hermes.Domain.Entities;
+
+public class User : IdentityUser<int>, IBaseEntity
 {
     public string Username { get; set; }
-    public string Email { get; set; }
-    public string PasswordHash { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
-    public string PhoneNumber { get; set; }
 
     public string Role { get; set; }
 
@@ -26,4 +25,5 @@ public class User : BaseEntity
 
     public int AddressId { get; set; }
     public Address Address { get; set; }
+    public Guid Guid { get; set; } = Guid.NewGuid();
 }

@@ -7,14 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="13.0.1"/>
-        <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="8.0.6"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0"/>
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.2"/>
+        <PackageReference Include="AutoMapper" Version="13.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.2" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Hermes.Domain\Hermes.Domain.csproj"/>
+        <ProjectReference Include="..\Hermes.Domain\Hermes.Domain.csproj" />
     </ItemGroup>
 
 </Project>
