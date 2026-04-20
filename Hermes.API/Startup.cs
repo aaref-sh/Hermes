@@ -1,14 +1,19 @@
-﻿using System.Text.Json;
-using EasyCaching.InMemory;
+﻿using EasyCaching.InMemory;
 using EFCoreSecondLevelCacheInterceptor;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Hermes.API.Filters;
 using Hermes.API.Utilities;
+using Hermes.Domain.Entities;
 using Hermes.Infrastructure.Data.Context;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using AutoValidationExtensions = SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions.ServiceCollectionExtensions;
+using System.Text;
 
 namespace Hermes.API;
 
@@ -17,6 +22,18 @@ public class Startup(IConfiguration configuration)
     public void ConfigureServices(IServiceCollection services)
     {
         // 1. Configure Database
+        services.AddIdentity<User, Role>(options =>
+        {
+            options.Password.RequireDigit = false;
+            options.Password.RequiredLength = 6;
+            options.Password.RequireNonAlphanumeric = true;
+            options.Password.RequireUppercase = false;
+            options.Password.RequireLowercase = false;
+            options.User.RequireUniqueEmail = true;
+        })
+        .AddEntityFrameworkStores<HermesDbContext>()
+        .AddDefaultTokenProviders();
+
         services.AddControllers();
         services.AddDbContext<HermesDbContext>((serviceProvider, options) =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
@@ -28,6 +45,26 @@ public class Startup(IConfiguration configuration)
                             .MigrationsAssembly(typeof(HermesDbContext).Assembly.FullName);
                     })
                 .AddInterceptors(serviceProvider.GetRequiredService<SecondLevelCacheInterceptor>()));
+
+        // JWT Authentication
+        var jwtSettings = configuration.GetSection("JwtSettings");
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings["Secret"]!)),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ClockSkew = TimeSpan.Zero,
+                ValidateLifetime = true
+            };
+        });
 
         // 2. Configure Caching
         const string cacheProvider = "InMemory";
@@ -93,12 +130,13 @@ public class Startup(IConfiguration configuration)
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+        app.ApplyMigrations();
         if (env.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-
+        
         app.UseHttpsRedirection()
             .UseRouting()
             .UseAuthentication()

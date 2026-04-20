@@ -9,12 +9,17 @@ using Hermes.Domain.Entities;
 using Hermes.Domain.Interfaces;
 using Hermes.Domain.Settings;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Hermes.Application.Services;
 
-public class AuthService(IUnitOfWork unitOfWork, IEmailService emailService, IMapper mapper, IOptions<JwtSettings> options)
+public class AuthService(IUnitOfWork unitOfWork,
+    UserManager<User> userManager,
+    SignInManager<User> signInManager,
+    RoleManager<Role> roleManager,
+    IEmailService emailService, IMapper mapper, IOptions<JwtSettings> options)
     : IAuthService
 {
     /// <summary>
@@ -24,13 +29,14 @@ public class AuthService(IUnitOfWork unitOfWork, IEmailService emailService, IMa
     /// <returns>The JWT token DTO containing the access token, and expiration time, or null if authentication failed.</returns>
     public async Task<JwtTokenDto?> LoginUserAsync(LoginDto login)
     {
+        var signInResult = await signInManager.PasswordSignInAsync(login.Username, login.Password, false, false);
         var user = await unitOfWork.Users.GetByUsernameAsync(login.Username);
-        if (user == null || !VerifyPassword(login.Password, user.PasswordHash))
+        if (!signInResult.Succeeded)
         {
             return null;
         }
 
-        var token = GenerateJwtToken(user.Id, user.Username, user.Role);
+        var token = await GenerateJwtToken(user.Id, user.UserName, user.Role);
 
         return token;
     }
@@ -51,21 +57,32 @@ public class AuthService(IUnitOfWork unitOfWork, IEmailService emailService, IMa
         {
             return false;
         }
-
-        var user = new User
+        var identityUser = new User
         {
-            Username = newUser.Username,
+            UserName = newUser.Username,
             Email = newUser.Email,
-            PasswordHash = HashPassword(newUser.Password),
-            Address = mapper.Map<Address>(newUser.Address),
+            FirstName = newUser.FirstName,
+            LastName = newUser.LastName,
             PhoneNumber = newUser.PhoneNumber,
             Role = newUser.Role,
-            FirstName = newUser.FirstName,
-            LastName = newUser.LastName
+            Address = mapper.Map<Address>(newUser.Address),
         };
 
-        await unitOfWork.Users.AddAsync(user);
-        return true;
+        var result = await userManager.CreateAsync(identityUser, newUser.Password);
+        // Add role if provided
+        if (result.Succeeded)
+        {
+            if (!string.IsNullOrEmpty(newUser.Role))
+            {
+                if (!await roleManager.RoleExistsAsync(newUser.Role))
+                {
+                    await roleManager.CreateAsync(new() { Name = newUser.Role });
+                }
+                await userManager.AddToRoleAsync(identityUser, newUser.Role);
+            }
+            return true;
+        }
+        return false;
     }
 
     /// <summary>
@@ -122,19 +139,19 @@ public class AuthService(IUnitOfWork unitOfWork, IEmailService emailService, IMa
     /// <param name="userName">The username of the user.</param>
     /// <param name="role">The role of the user.</param>
     /// <returns>The JWT token DTO containing the access token, refresh token, and expiration times.</returns>
-    public JwtTokenDto GenerateJwtToken(int userId, string userName, string role)
+    public async Task<JwtTokenDto> GenerateJwtToken(int userId, string userName, string role)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(options.Value.Secret);
         
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new Claim[]
-            {
+            Subject = new ClaimsIdentity(
+            [
                 new(ClaimTypes.NameIdentifier, userId.ToString()),
                 new(ClaimTypes.Name, userName),
                 new(ClaimTypes.Role, role)
-            }),
+            ]),
             Expires = DateTime.UtcNow.AddDays(options.Value.AccessTokenExpirationInDays),
             SigningCredentials =
                 new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -143,7 +160,7 @@ public class AuthService(IUnitOfWork unitOfWork, IEmailService emailService, IMa
         var refreshToken = GenerateRefreshToken();
         var refreshExpirationDate = DateTime.UtcNow.AddDays(options.Value.RefreshTokenExpirationInDays);
 
-        unitOfWork.RefreshTokens.AddAsync(new RefreshToken
+        await unitOfWork.RefreshTokens.AddAsync(new RefreshToken
             { UserId = userId, Token = refreshToken, Expires = refreshExpirationDate, Role = role });
         
         return new JwtTokenDto
@@ -229,7 +246,7 @@ public class AuthService(IUnitOfWork unitOfWork, IEmailService emailService, IMa
     /// <returns>The generated password reset token.</returns>
     private string GeneratePasswordResetToken(User user)
     {
-        var tokenBase = $"{user.Id}-{user.Username}-{user.Guid}";
+        var tokenBase = $"{user.Id}-{user.UserName}-{user.Guid}";
         return HashPassword(tokenBase).Split('=')[0].Replace('+', '-').Replace('/', '_');
     }
 }

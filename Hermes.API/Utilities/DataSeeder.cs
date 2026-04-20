@@ -372,8 +372,8 @@ public class DataSeeder(HermesDbContext context)
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Storage", Value = "128GB" },
-                        new() { Name = "Color", Value = "Blue" }
+                        new() { Name = "Storage", Value = "128GB", VariantOptionType = VariantOptionType.Hardware},
+                        new() { Name = "Color", Value = "Blue", VariantOptionType = VariantOptionType.Color }
                     }
                 },
                 new()
@@ -386,8 +386,8 @@ public class DataSeeder(HermesDbContext context)
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Storage", Value = "256GB" },
-                        new() { Name = "Color", Value = "Black" }
+                        new() { Name = "Storage", Value = "256GB", VariantOptionType = VariantOptionType.Hardware },
+                        new() { Name = "Color", Value = "Black", VariantOptionType = VariantOptionType.Color }
                     }
                 },
                 new()
@@ -400,8 +400,8 @@ public class DataSeeder(HermesDbContext context)
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Storage", Value = "512GB" },
-                        new() { Name = "Color", Value = "Silver" }
+                        new() { Name = "Storage", Value = "512GB", VariantOptionType = VariantOptionType.Hardware },
+                        new() { Name = "Color", Value = "Silver", VariantOptionType = VariantOptionType.Color }
                     }
                 }
             };
@@ -432,9 +432,9 @@ public class DataSeeder(HermesDbContext context)
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Processor", Value = "M2 Pro" },
-                        new() { Name = "Memory", Value = "16GB" },
-                        new() { Name = "Storage", Value = "512GB" }
+                        new() { Name = "Processor", Value = "M2 Pro", VariantOptionType = VariantOptionType.Hardware },
+                        new() { Name = "Memory", Value = "16GB", VariantOptionType = VariantOptionType.Hardware },
+                        new() { Name = "Storage", Value = "512GB", VariantOptionType = VariantOptionType.Hardware }
                     }
                 },
                 new()
@@ -447,9 +447,9 @@ public class DataSeeder(HermesDbContext context)
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Processor", Value = "M2 Pro" },
-                        new() { Name = "Memory", Value = "32GB" },
-                        new() { Name = "Storage", Value = "1TB" }
+                        new() { Name = "Processor", Value = "M2 Pro", VariantOptionType = VariantOptionType.Hardware },
+                        new() { Name = "Memory", Value = "32GB", VariantOptionType = VariantOptionType.Hardware },
+                        new() { Name = "Storage", Value = "1TB", VariantOptionType = VariantOptionType.Hardware }
                     }
                 }
             };
@@ -481,8 +481,8 @@ public class DataSeeder(HermesDbContext context)
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Size", Value = "S" },
-                        new() { Name = "Color", Value = "Red" }
+                        new() { Name = "Size", Value = "S", VariantOptionType = VariantOptionType.Size },
+                        new() { Name = "Color", Value = "Red", VariantOptionType = VariantOptionType.Color }
                     }
                 },
                 new()
@@ -495,8 +495,8 @@ public class DataSeeder(HermesDbContext context)
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Size", Value = "M" },
-                        new() { Name = "Color", Value = "Blue" }
+                        new() { Name = "Size", Value = "M", VariantOptionType = VariantOptionType.Size },
+                        new() { Name = "Color", Value = "Blue", VariantOptionType = VariantOptionType.Color }
                     }
                 },
                 new()
@@ -509,8 +509,8 @@ public class DataSeeder(HermesDbContext context)
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Size", Value = "L" },
-                        new() { Name = "Color", Value = "Green" }
+                        new() { Name = "Size", Value = "L", VariantOptionType = VariantOptionType.Size },
+                        new() { Name = "Color", Value = "Green", VariantOptionType = VariantOptionType.Color }
                     }
                 }
             };
@@ -542,8 +542,8 @@ public class DataSeeder(HermesDbContext context)
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Size", Value = "S" },
-                        new() { Name = "Color", Value = "White" }
+                        new() { Name = "Size", Value = "S", VariantOptionType = VariantOptionType.Size },
+                        new() { Name = "Color", Value = "White", VariantOptionType = VariantOptionType.Color }
                     }
                 },
                 new()
@@ -556,8 +556,8 @@ public class DataSeeder(HermesDbContext context)
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Size", Value = "M" },
-                        new() { Name = "Color", Value = "Blue" }
+                        new() { Name = "Size", Value = "M", VariantOptionType = VariantOptionType.Size },
+                        new() { Name = "Color", Value = "Blue", VariantOptionType = VariantOptionType.Color }
                     }
                 },
                 new()
@@ -570,8 +570,8 @@ public class DataSeeder(HermesDbContext context)
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Size", Value = "L" },
-                        new() { Name = "Color", Value = "Black" }
+                        new() { Name = "Size", Value = "L", VariantOptionType = VariantOptionType.Size },
+                        new() { Name = "Color", Value = "Black", VariantOptionType = VariantOptionType.Color }
                     }
                 }
             };
@@ -603,7 +603,7 @@ public class DataSeeder(HermesDbContext context)
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Color", Value = "Brown" }
+                        new() { Name = "Color", Value = "Brown", VariantOptionType = VariantOptionType.Color }
                     }
                 },
                 new()
@@ -616,7 +616,7 @@ public class DataSeeder(HermesDbContext context)
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Color", Value = "Black" }
+                        new() { Name = "Color", Value = "Black", VariantOptionType = VariantOptionType.Color }
                     }
                 }
             };
@@ -648,7 +648,7 @@ public class DataSeeder(HermesDbContext context)
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Color", Value = "Gold" }
+                        new() { Name = "Color", Value = "Gold", VariantOptionType = VariantOptionType.Color }
                     }
                 },
                 new()
@@ -661,7 +661,7 @@ public class DataSeeder(HermesDbContext context)
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Color", Value = "Silver" }
+                        new() { Name = "Color", Value = "Silver", VariantOptionType = VariantOptionType.Color }
                     }
                 }
             };
@@ -693,7 +693,7 @@ public class DataSeeder(HermesDbContext context)
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Format", Value = "Paperback" }
+                        new() { Name = "Format", Value = "Paperback", VariantOptionType = VariantOptionType.Custom }
                     }
                 },
                 new()
@@ -706,7 +706,7 @@ public class DataSeeder(HermesDbContext context)
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Format", Value = "Hardcover" }
+                        new() { Name = "Format", Value = "Hardcover", VariantOptionType = VariantOptionType.Custom }
                     }
                 }
             };
@@ -738,7 +738,7 @@ public class DataSeeder(HermesDbContext context)
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Format", Value = "Paperback" }
+                        new() { Name = "Format", Value = "Paperback", VariantOptionType = VariantOptionType.Custom }
                     }
                 },
                 new()
@@ -751,7 +751,7 @@ public class DataSeeder(HermesDbContext context)
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Format", Value = "Hardcover" }
+                        new() { Name = "Format", Value = "Hardcover", VariantOptionType = VariantOptionType.Custom }
                     }
                 }
             };

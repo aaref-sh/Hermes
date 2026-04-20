@@ -44,7 +44,7 @@ public interface IAuthService
     /// <param name="userName">The username of the user.</param>
     /// <param name="role">The role of the user.</param>
     /// <returns>The JWT token DTO containing the access token, and expiration times.</returns>
-    JwtTokenDto GenerateJwtToken(int userId, string userName, string role);
+    Task<JwtTokenDto> GenerateJwtToken(int userId, string userName, string role);
 
     /// <summary>
     /// Validates a JWT token and returns the associated ClaimsPrincipal if valid.

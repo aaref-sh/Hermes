@@ -2,14 +2,23 @@
 using Hermes.Application.Services;
 using Hermes.Domain.Interfaces;
 using Hermes.Domain.Settings;
+using Hermes.Infrastructure.Data.Context;
 using Hermes.Infrastructure.Repositories;
 using Hermes.Infrastructure.Services;
 using Hermes.Infrastructure.Utilities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hermes.API.Utilities;
 
 public static class ServiceExtensions
 {
+    public static IApplicationBuilder ApplyMigrations(this IApplicationBuilder app)
+    {
+        using var scope = app.ApplicationServices.CreateScope();
+        using var db = scope.ServiceProvider.GetRequiredService<HermesDbContext>();
+        db.Database.Migrate();
+        return app;
+    }
     /// <summary>
     /// Adds repositories to the service collection.
     /// </summary>
