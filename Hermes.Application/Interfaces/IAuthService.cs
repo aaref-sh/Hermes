@@ -25,10 +25,9 @@ public interface IAuthService
     /// <summary>
     /// Resets the user's password using a password reset token.
     /// </summary>
-    /// <param name="token">The password reset token.</param>
-    /// <param name="newPassword">The new password.</param>
+    /// <param name="dto">The reset password details.</param>
     /// <returns>True if the password was reset successfully, false otherwise.</returns>
-    Task<bool> ResetPasswordAsync(string token, string newPassword);
+    Task<bool> ResetPasswordAsync(ResetPasswordDto dto);
 
     /// <summary>
     /// Sends a password reset email to the specified email address.

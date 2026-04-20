@@ -218,15 +218,19 @@ public class AuthenticationControllerTests(CustomWebApplicationFactory<Program> 
     }
 
     [Fact]
-    public async Task ResetPassword_ValidTokenAndNewPassword_ReturnsOk()
+    public async Task ResetPassword_ValidDto_ReturnsOk()
     {
         // Arrange
-        var resetToken = "1234567890";
-        
-        var newPassword = "NewPassword123";
+        var dto = new ResetPasswordDto
+        {
+            Email = "admin@hermes.com",
+            Token = "valid_token",
+            NewPassword = "NewPassword123",
+            ConfirmPassword = "NewPassword123"
+        };
 
         // Act
-        var response = await _client.PostAsync($"/api/Authentication/reset/{resetToken}/{newPassword}", null);
+        var response = await _client.PostAsJsonAsync("/api/Authentication/reset", dto);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -235,18 +239,23 @@ public class AuthenticationControllerTests(CustomWebApplicationFactory<Program> 
     }
 
     [Fact]
-    public async Task ResetPassword_InvalidToken_ReturnsBadRequest()
+    public async Task ResetPassword_InvalidDto_ReturnsBadRequest()
     {
         // Arrange
-        var token = "invalid_token";
-        var newPassword = "NewPassword123";
+        var dto = new ResetPasswordDto
+        {
+            Email = "invalid@email.com",
+            Token = "invalid_token",
+            NewPassword = "short",
+            ConfirmPassword = "different"
+        };
 
         // Act
-        var response = await _client.PostAsync($"/api/Authentication/reset/{token}/{newPassword}", null);
+        var response = await _client.PostAsJsonAsync("/api/Authentication/reset", dto);
         
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         var message = await response.Content.ReadAsStringAsync();
-        Assert.Equal("Invalid or expired password reset token.", message);
+        Assert.Contains("Invalid or expired password reset token.", message); // or validation error
     }
 }

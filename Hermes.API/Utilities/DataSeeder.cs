@@ -98,7 +98,7 @@ public class DataSeeder(HermesDbContext context)
                     Country = "US"
                 },
                 Role = "Admin",
-                PasswordResetToken = "1234567890"
+                // PasswordResetToken removed
             };
 
             var user1 = new User
@@ -117,10 +117,9 @@ public class DataSeeder(HermesDbContext context)
                     PostalCode = "62701",
                     Country = "US"
                 },
-                Role = "User",
-                PasswordResetToken = "1234567890"
-
-            };
+                Role = "User"
+                // PasswordResetToken removed
+            }; 
 
             var user2 = new User
             {
@@ -139,7 +138,7 @@ public class DataSeeder(HermesDbContext context)
                     Country = "US"
                 },
                 Role = "User",
-                PasswordResetToken = "1234567890"
+                // PasswordResetToken = "1234567890"
             };
 
             var seller1 = new User
@@ -159,8 +158,7 @@ public class DataSeeder(HermesDbContext context)
                     Country = "US"
                 },
                 Role = "Seller",
-                Rating = 4,
-                PasswordResetToken = "1234567890"
+                Rating = 4
             };
 
             var seller2 = new User
@@ -180,8 +178,7 @@ public class DataSeeder(HermesDbContext context)
                     Country = "US"
                 },
                 Role = "Seller",
-                Rating = 5,
-                PasswordResetToken = "1234567890"
+                Rating = 5
             };
 
             await context.Users.AddRangeAsync(admin, user1, user2, seller1, seller2);

@@ -12,9 +12,6 @@ public class User : IdentityUser<int>, IBaseEntity
     // In case of a Seller role
     public int Rating { get; set; }
 
-    public string? PasswordResetToken { get; set; }
-    public DateTime? PasswordResetTokenExpiration { get; set; }
-
     // Navigation Properties
     public ICollection<Order> Orders { get; set; } = [];
     public ICollection<Review> Reviews { get; set; } = [];

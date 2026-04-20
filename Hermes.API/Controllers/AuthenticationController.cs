@@ -87,16 +87,15 @@ public class AuthenticationController(IAuthService authService, IUnitOfWork unit
     /// <summary>
     /// Resets the password for the specified user.
     /// </summary>
-    /// <param name="token">The password reset token.</param>
-    /// <param name="newPassword">The new password.</param>
+    /// <param name="dto">The reset password DTO.</param>
     /// <returns>
     /// Returns an Ok response with a message "Password reset successfully." if the password is reset successfully.
     /// Returns a BadRequest response with a message "Invalid or expired password reset token." if the token is invalid or expired.
     /// </returns>
-    [HttpPost("reset/{token}/{newPassword}")]
-    public async Task<IActionResult> ResetPassword(string token, string newPassword)
+    [HttpPost("reset")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
     {
-        var success = await authService.ResetPasswordAsync(token, newPassword);
+        var success = await authService.ResetPasswordAsync(dto);
         return success ? Ok("Password reset successfully.") : BadRequest("Invalid or expired password reset token.");
     }
 }

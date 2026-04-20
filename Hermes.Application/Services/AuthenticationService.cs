@@ -8,7 +8,6 @@ using Hermes.Application.Interfaces;
 using Hermes.Domain.Entities;
 using Hermes.Domain.Interfaces;
 using Hermes.Domain.Settings;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -86,27 +85,20 @@ public class AuthService(IUnitOfWork unitOfWork,
     }
 
     /// <summary>
-    /// Resets the password for the specified user.
+    /// Resets the user's password using a password reset token.
     /// </summary>
-    /// <param name="token">The password reset token.</param>
-    /// <param name="newPassword">The new password.</param>
+    /// <param name="dto">The reset password details.</param>
     /// <returns>True if the password was reset successfully, false otherwise.</returns>
-    public async Task<bool> ResetPasswordAsync(string token, string newPassword)
+    public async Task<bool> ResetPasswordAsync(ResetPasswordDto dto)
     {
-        var user = (await unitOfWork.Users.ExecuteQueryAsync(
-            unitOfWork.Users.FindAsync(u => u.PasswordResetToken == token))).FirstOrDefault();
-        if (user == null || user.PasswordResetTokenExpiration < DateTime.UtcNow)
+        var user = await userManager.FindByEmailAsync(dto.Email);
+        if (user == null)
         {
             return false;
         }
 
-        user.PasswordHash = HashPassword(newPassword);
-
-        user.PasswordResetToken = null;
-        user.PasswordResetTokenExpiration = null;
-
-        await unitOfWork.Users.UpdateAsync(user);
-        return true;
+        var result = await userManager.ResetPasswordAsync(user, dto.Token, dto.NewPassword);
+        return result.Succeeded;
     }
 
     /// <summary>
@@ -116,18 +108,13 @@ public class AuthService(IUnitOfWork unitOfWork,
     /// <returns>True if the email was sent successfully, false otherwise.</returns>
     public async Task<bool> RequestPasswordResetAsync(string email)
     {
-        var user = await unitOfWork.Users.GetByEmailAsync(email);
+        var user = await userManager.FindByEmailAsync(email);
         if (user == null)
         {
             return false;
         }
 
-        var resetToken = GeneratePasswordResetToken(user);
-
-        user.PasswordResetToken = resetToken;
-        user.PasswordResetTokenExpiration = DateTime.UtcNow.AddHours(1);
-        await unitOfWork.Users.UpdateAsync(user);
-
+        var resetToken = await userManager.GeneratePasswordResetTokenAsync(user);
         await emailService.SendPasswordResetEmailAsync(user.Email, resetToken);
         return true;
     }
@@ -213,40 +200,4 @@ public class AuthService(IUnitOfWork unitOfWork,
         }
     }
 
-    /// <summary>
-    /// Hashes a password using PBKDF2 with HMACSHA256.
-    /// </summary>
-    /// <param name="password">The password to hash.</param>
-    /// <returns>The hashed password as a base64-encoded string.</returns>
-    private string HashPassword(string password)
-    {
-        return Convert.ToBase64String(KeyDerivation.Pbkdf2(
-            password: password,
-            salt: Encoding.ASCII.GetBytes(options.Value.Salt),
-            prf: KeyDerivationPrf.HMACSHA256,
-            iterationCount: 10000,
-            numBytesRequested: 256 / 8));
-    }
-
-    /// <summary>
-    /// Verifies a password against a hashed password.
-    /// </summary>
-    /// <param name="password">The password to verify.</param>
-    /// <param name="hashedPassword">The hashed password to compare against.</param>
-    /// <returns>True if the passwords match, false otherwise.</returns>
-    private bool VerifyPassword(string password, string hashedPassword)
-    {
-        return HashPassword(password) == hashedPassword;
-    }
-
-    /// <summary>
-    /// Generates a password reset token for a user.
-    /// </summary>
-    /// <param name="user">The user to generate the token for.</param>
-    /// <returns>The generated password reset token.</returns>
-    private string GeneratePasswordResetToken(User user)
-    {
-        var tokenBase = $"{user.Id}-{user.UserName}-{user.Guid}";
-        return HashPassword(tokenBase).Split('=')[0].Replace('+', '-').Replace('/', '_');
-    }
 }
