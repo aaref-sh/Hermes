@@ -1,7 +1,8 @@
-﻿
+﻿using Microsoft.AspNetCore.Identity;
+
 namespace Hermes.Domain.Entities;
 
-public class Role : BaseEntity
+public class Role : IdentityRole<int>, IBaseEntity
 {
-    public string Name { get; set; } 
+    public Guid Guid {get; set;}
 }
