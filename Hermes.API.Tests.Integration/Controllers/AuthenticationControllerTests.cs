@@ -72,7 +72,7 @@ public class AuthenticationControllerTests(CustomWebApplicationFactory<Program> 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         var message = await response.Content.ReadAsStringAsync();
-        Assert.Equal("Username or email is already taken.", message);
+        Assert.Equal("UserName or email is already taken.", message);
     }
 
     [Fact]
@@ -105,7 +105,7 @@ public class AuthenticationControllerTests(CustomWebApplicationFactory<Program> 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         var message = await response.Content.ReadAsStringAsync();
-        Assert.Equal("Username or email is already taken.", message);
+        Assert.Equal("UserName or email is already taken.", message);
     }
 
     [Fact]

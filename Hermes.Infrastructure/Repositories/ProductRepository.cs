@@ -193,7 +193,7 @@ public class ProductRepository(HermesDbContext context) : GenericRepository<Prod
 
         if (!string.IsNullOrEmpty(seller))
         {
-            query = query.Where(p => p.Seller.Username.Contains(seller));
+            query = query.Where(p => p.Seller.UserName.Contains(seller));
         }
 
         if (!string.IsNullOrEmpty(sortBy))

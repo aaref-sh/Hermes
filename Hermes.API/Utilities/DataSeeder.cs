@@ -83,7 +83,7 @@ public class DataSeeder(HermesDbContext context)
         {
             var admin = new User
             {
-                Username = "admin",
+                UserName = "admin",
                 Email = "admin@hermes.com",
                 PasswordHash = "5v/JL+P4JDF4HXco6t2O7rKYMUSgJVlXCRDqFuJV20o=",
                 FirstName = "Admin",
@@ -103,7 +103,7 @@ public class DataSeeder(HermesDbContext context)
 
             var user1 = new User
             {
-                Username = "user1",
+                UserName = "user1",
                 Email = "user1@hermes.com",
                 PasswordHash = "5v/JL+P4JDF4HXco6t2O7rKYMUSgJVlXCRDqFuJV20o=",
                 FirstName = "John",
@@ -124,7 +124,7 @@ public class DataSeeder(HermesDbContext context)
 
             var user2 = new User
             {
-                Username = "user2",
+                UserName = "user2",
                 Email = "user2@hermes.com",
                 PasswordHash = "5v/JL+P4JDF4HXco6t2O7rKYMUSgJVlXCRDqFuJV20o=",
                 FirstName = "Jane",
@@ -144,7 +144,7 @@ public class DataSeeder(HermesDbContext context)
 
             var seller1 = new User
             {
-                Username = "seller1",
+                UserName = "seller1",
                 Email = "seller1@hermes.com",
                 PasswordHash = "5v/JL+P4JDF4HXco6t2O7rKYMUSgJVlXCRDqFuJV20o=",
                 FirstName = "Bob",
@@ -165,7 +165,7 @@ public class DataSeeder(HermesDbContext context)
 
             var seller2 = new User
             {
-                Username = "seller2",
+                UserName = "seller2",
                 Email = "seller2@hermes.com",
                 PasswordHash = "5v/JL+P4JDF4HXco6t2O7rKYMUSgJVlXCRDqFuJV20o=",
                 FirstName = "Alice",
@@ -209,7 +209,7 @@ public class DataSeeder(HermesDbContext context)
                 Tags = new List<string> { "Apple", "Smartphone", "Pro", "Camera", "A16 Bionic" },
                 HostedAt = HostedAt.Store,
                 CategoryId = (await context.Categories.FirstOrDefaultAsync(c => c.Name == "Smartphones"))!.Id,
-                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.Username == "seller1"))!.Id
+                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.UserName == "seller1"))!.Id
             };
 
             var macbookPro = new Product
@@ -229,7 +229,7 @@ public class DataSeeder(HermesDbContext context)
                 Tags = new List<string> { "Apple", "Laptop", "Pro", "M2 Pro", "Retina" },
                 HostedAt = HostedAt.Store,
                 CategoryId = (await context.Categories.FirstOrDefaultAsync(c => c.Name == "Laptops"))!.Id,
-                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.Username == "seller2"))!.Id
+                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.UserName == "seller2"))!.Id
             };
 
             // Fashion
@@ -250,7 +250,7 @@ public class DataSeeder(HermesDbContext context)
                 Tags = new List<string> { "Women", "Dress", "Summer", "Floral", "Fashion" },
                 HostedAt = HostedAt.Store,
                 CategoryId = (await context.Categories.FirstOrDefaultAsync(c => c.Name == "Women's Wear"))!.Id,
-                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.Username == "seller1"))!.Id
+                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.UserName == "seller1"))!.Id
             };
 
             var mensShirt = new Product
@@ -270,7 +270,7 @@ public class DataSeeder(HermesDbContext context)
                 Tags = new List<string> { "Men", "Shirt", "Cotton", "Classic", "Fashion" },
                 HostedAt = HostedAt.Store,
                 CategoryId = (await context.Categories.FirstOrDefaultAsync(c => c.Name == "Men's Wear"))!.Id,
-                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.Username == "seller2"))!.Id
+                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.UserName == "seller2"))!.Id
             };
 
             // Home
@@ -291,7 +291,7 @@ public class DataSeeder(HermesDbContext context)
                 Tags = new List<string> { "Sofa", "Leather", "Modern", "Furniture", "Home" },
                 HostedAt = HostedAt.Store,
                 CategoryId = (await context.Categories.FirstOrDefaultAsync(c => c.Name == "Furniture"))!.Id,
-                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.Username == "seller1"))!.Id
+                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.UserName == "seller1"))!.Id
             };
 
             var lamp = new Product
@@ -311,7 +311,7 @@ public class DataSeeder(HermesDbContext context)
                 Tags = new List<string> { "Lamp", "Table", "Decor", "Lighting", "Home" },
                 HostedAt = HostedAt.Store,
                 CategoryId = (await context.Categories.FirstOrDefaultAsync(c => c.Name == "Decor"))!.Id,
-                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.Username == "seller2"))!.Id
+                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.UserName == "seller2"))!.Id
             };
 
             // Books
@@ -332,7 +332,7 @@ public class DataSeeder(HermesDbContext context)
                 Tags = new List<string> { "Fiction", "Classic", "Literature", "Books" },
                 HostedAt = HostedAt.Warehouse,
                 CategoryId = (await context.Categories.FirstOrDefaultAsync(c => c.Name == "Books"))!.Id,
-                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.Username == "seller1"))!.Id
+                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.UserName == "seller1"))!.Id
             };
 
             var nonFictionBook = new Product
@@ -352,7 +352,7 @@ public class DataSeeder(HermesDbContext context)
                 Tags = new List<string> { "Non-Fiction", "History", "Humanity", "Books" },
                 HostedAt = HostedAt.Warehouse,
                 CategoryId = (await context.Categories.FirstOrDefaultAsync(c => c.Name == "Books"))!.Id,
-                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.Username == "seller2"))!.Id
+                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.UserName == "seller2"))!.Id
             };
 
             await context.Products.AddRangeAsync(iphone14Pro, macbookPro, womensDress, mensShirt, sofa, lamp,
@@ -786,8 +786,8 @@ public class DataSeeder(HermesDbContext context)
             var fictionBook = await context.Products.FirstOrDefaultAsync(p => p.Name == "The Great Gatsby");
             var nonFictionBook = await context.Products.FirstOrDefaultAsync(p => p.Name == "Sapiens");
 
-            var user1 = await context.Users.FirstOrDefaultAsync(u => u.Username == "user1");
-            var user2 = await context.Users.FirstOrDefaultAsync(u => u.Username == "user2");
+            var user1 = await context.Users.FirstOrDefaultAsync(u => u.UserName == "user1");
+            var user2 = await context.Users.FirstOrDefaultAsync(u => u.UserName == "user2");
 
             await context.Reviews.AddRangeAsync(
                 new Review
@@ -885,8 +885,8 @@ public class DataSeeder(HermesDbContext context)
         // 8. Seed Carts
         if (!await context.Carts.AnyAsync())
         {
-            var user1 = await context.Users.FirstOrDefaultAsync(u => u.Username == "admin");
-            var user2 = await context.Users.FirstOrDefaultAsync(u => u.Username == "user2");
+            var user1 = await context.Users.FirstOrDefaultAsync(u => u.UserName == "admin");
+            var user2 = await context.Users.FirstOrDefaultAsync(u => u.UserName == "user2");
             var iphone14Pro = await context.Products.FirstOrDefaultAsync(p => p.Name == "iPhone 14 Pro");
             var macbookPro = await context.Products.FirstOrDefaultAsync(p => p.Name == "MacBook Pro");
 
@@ -930,8 +930,8 @@ public class DataSeeder(HermesDbContext context)
         // 9. Seed Orders
         if (!await context.Orders.AnyAsync())
         {
-            var user1 = await context.Users.FirstOrDefaultAsync(u => u.Username == "user1");
-            var user2 = await context.Users.FirstOrDefaultAsync(u => u.Username == "user2");
+            var user1 = await context.Users.FirstOrDefaultAsync(u => u.UserName == "user1");
+            var user2 = await context.Users.FirstOrDefaultAsync(u => u.UserName == "user2");
             var iphone14Pro = await context.Products.FirstOrDefaultAsync(p => p.Name == "iPhone 14 Pro");
             var macbookPro = await context.Products.FirstOrDefaultAsync(p => p.Name == "MacBook Pro");
 

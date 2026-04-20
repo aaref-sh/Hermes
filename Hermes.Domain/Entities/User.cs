@@ -4,7 +4,6 @@ namespace Hermes.Domain.Entities;
 
 public class User : IdentityUser<int>, IBaseEntity
 {
-    public string Username { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
 

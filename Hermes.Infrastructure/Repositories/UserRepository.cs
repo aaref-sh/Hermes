@@ -40,7 +40,7 @@ public class UserRepository(HermesDbContext context) : GenericRepository<User>(c
             .Include(p => p.Cart)
             .Include(p => p.Orders)
             .Include(p => p.Products)
-            .FirstOrDefaultAsync(u => u.Username == username);
+            .FirstOrDefaultAsync(u => u.UserName == username);
     }
 
     /// <summary>
@@ -70,7 +70,7 @@ public class UserRepository(HermesDbContext context) : GenericRepository<User>(c
     /// </returns>
     public async Task<bool> UserExistsAsync(string username)
     {
-        return await Context.Users.AnyAsync(u => u.Username == username);
+        return await Context.Users.AnyAsync(u => u.UserName == username);
     }
     
     /// <summary>

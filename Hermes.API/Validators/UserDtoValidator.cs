@@ -8,8 +8,8 @@ public class UserDtoValidator : AbstractValidator<UserDto>
     public UserDtoValidator()
     {
         RuleFor(x => x.Username)
-            .NotEmpty().WithMessage("Username is required.")
-            .MaximumLength(50).WithMessage("Username cannot exceed 50 characters.");
+            .NotEmpty().WithMessage("UserName is required.")
+            .MaximumLength(50).WithMessage("UserName cannot exceed 50 characters.");
 
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email is required.")

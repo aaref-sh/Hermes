@@ -22,7 +22,7 @@ public class AuthenticationController(IAuthService authService, IUnitOfWork unit
     public async Task<IActionResult> Register([FromBody] RegisterDto newUser)
     {
         var result = await authService.RegisterAsync(newUser);
-        return result ? Ok("User registered successfully.") : BadRequest("Username or email is already taken.");
+        return result ? Ok("User registered successfully.") : BadRequest("UserName or email is already taken.");
     }
 
     /// <summary>
@@ -64,7 +64,7 @@ public class AuthenticationController(IAuthService authService, IUnitOfWork unit
         if (user == null) 
             return Unauthorized("User associated with refresh token not found.");
 
-        var newTokens = authService.GenerateJwtToken(userId, user.Username, storedRefreshToken.Role);
+        var newTokens = authService.GenerateJwtToken(userId, user.UserName, storedRefreshToken.Role);
         
         return Ok(newTokens);
     }
