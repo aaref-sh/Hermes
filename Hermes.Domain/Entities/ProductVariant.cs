@@ -18,5 +18,6 @@ public class ProductVariant : BaseEntity
     public byte[]? RowVersion { get; set; }
 
     // Navigation properties
+    public ICollection<ProductMedia> Medias { get; set; } = [];
     public ICollection<ProductVariantOption> Options { get; set; } = [];
 }

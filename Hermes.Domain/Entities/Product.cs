@@ -28,4 +28,15 @@ public class Product : BaseEntity
     public ICollection<OrderItem> OrderItems { get; set; } = [];
     public ICollection<Review> Reviews { get; set; } = [];
     public ICollection<ProductVariant> Variants { get; set; } = [];
+    public ICollection<ProductMedia> Medias { get; set; } = [];
+}
+
+public class ProductMedia : BaseEntity
+{
+    public Product Product { get; set; }
+    public int ProductId { get; set; }
+    public ProductVariant? ProductVariant { get; set; }
+    public int ProductVariantId { get; set; }
+    public string MediaId { get; set; }
+    public ProductMediaType MediaType { get; set; }
 }
