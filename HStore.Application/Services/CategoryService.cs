@@ -3,21 +3,30 @@ using HStore.Application.DTOs;
 using HStore.Application.Interfaces;
 using HStore.Domain.Entities;
 using HStore.Domain.Interfaces;
+using HStore.Domain.Entities;
 using HStore.Application.Exceptions;
 
 namespace HStore.Application.Services;
 
-public class CategoryService(IUnitOfWork unitOfWork, IMapper mapper) : ICategoryService
+public class CategoryService : BaseService<Category, CategoryDto>, ICategoryService
 {
+    private readonly IUnitOfWork _unitOfWork;
+
+    public CategoryService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork.Categories, mapper)
+    {
+        _unitOfWork = unitOfWork;
+    }
+
     /// <summary>
     /// Retrieves a collection of all categories.
     /// </summary>
+
     /// <returns>An IEnumerable of CategoryDto objects representing all categories.</returns>
     public async Task<IEnumerable<CategoryDto>> GetAllCategoriesAsync()
     {
-        var query = unitOfWork.Categories.GetAllAsync();
-        var categories = await unitOfWork.Categories.ExecuteQueryAsync(query);
-        return mapper.Map<IEnumerable<CategoryDto>>(categories);
+        var query = _unitOfWork.Categories.GetAllAsync();
+        var categories = await _unitOfWork.Categories.ExecuteQueryAsync(query);
+        return _mapper.Map<IEnumerable<CategoryDto>>(categories);
     }
 
     /// <summary>
@@ -27,8 +36,8 @@ public class CategoryService(IUnitOfWork unitOfWork, IMapper mapper) : ICategory
     /// <returns>A CategoryDto object representing the specified category, or null if no category with the given ID is found.</returns>
     public async Task<CategoryDto?> GetCategoryByIdAsync(int categoryId)
     {
-        var category = await unitOfWork.Categories.GetByIdAsync(categoryId);
-        return mapper.Map<CategoryDto>(category);
+        var category = await _unitOfWork.Categories.GetByIdAsync(categoryId);
+        return _mapper.Map<CategoryDto>(category);
     }
 
     /// <summary>
@@ -38,12 +47,12 @@ public class CategoryService(IUnitOfWork unitOfWork, IMapper mapper) : ICategory
     /// <returns>An IEnumerable of CategoryDto objects representing the subcategories.</returns>
     public async Task<IEnumerable<CategoryDto>> GetSubcategoriesAsync(int categoryId)
     {
-        var category = await unitOfWork.Categories.ExistsAsync(categoryId);
+        var category = await _unitOfWork.Categories.ExistsAsync(categoryId);
         if (!category)
             throw new NotFoundException("Category not found.");
         
-        var subcategories = await unitOfWork.Categories.GetSubcategoriesAsync(categoryId);
-        return mapper.Map<IEnumerable<CategoryDto>>(subcategories);
+        var subcategories = await _unitOfWork.Categories.GetSubcategoriesAsync(categoryId);
+        return _mapper.Map<IEnumerable<CategoryDto>>(subcategories);
     }
 
     /// <summary>
@@ -53,9 +62,9 @@ public class CategoryService(IUnitOfWork unitOfWork, IMapper mapper) : ICategory
     /// <returns>A CategoryDto object representing the newly created category.</returns>
     public async Task<CategoryDto?> CreateCategoryAsync(CreateCategoryDto categoryDto)
     {
-        var category = mapper.Map<Category>(categoryDto);
-        await unitOfWork.Categories.AddAsync(category); 
-        return mapper.Map<CategoryDto>(category); 
+        var category = _mapper.Map<Category>(categoryDto);
+        await _unitOfWork.Categories.AddAsync(category); 
+        return _mapper.Map<CategoryDto>(category);
     }
 
     /// <summary>
@@ -66,13 +75,13 @@ public class CategoryService(IUnitOfWork unitOfWork, IMapper mapper) : ICategory
     /// <returns>A Task representing the asynchronous operation.</returns>
     public async Task UpdateCategoryAsync(int categoryId, UpdateCategoryDto categoryDto)
     {
-        var existingCategory = await unitOfWork.Categories.GetByIdAsync(categoryId);
+        var existingCategory = await _unitOfWork.Categories.GetByIdAsync(categoryId);
 
         if (existingCategory == null)
             throw new NotFoundException("Category not found.");
 
-        mapper.Map(categoryDto, existingCategory);
-        await unitOfWork.Categories.UpdateAsync(existingCategory);
+        _mapper.Map(categoryDto, existingCategory);
+        await _unitOfWork.Categories.UpdateAsync(existingCategory);
     }
 
     /// <summary>
@@ -82,11 +91,11 @@ public class CategoryService(IUnitOfWork unitOfWork, IMapper mapper) : ICategory
     /// <returns>A Task representing the asynchronous operation.</returns>
     public async Task DeleteCategoryAsync(int categoryId)
     {
-        var category = await unitOfWork.Categories.GetByIdAsync(categoryId);
+        var category = await _unitOfWork.Categories.GetByIdAsync(categoryId);
 
         if (category == null)
             throw new NotFoundException("Category not found.");
 
-        await unitOfWork.Categories.DeleteAsync(category);
+        await _unitOfWork.Categories.DeleteAsync(category);
     }
 }

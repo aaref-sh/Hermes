@@ -30,6 +30,13 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         return Ok(subcategories);
     }
 
+    [HttpGet("All")]
+    public async Task<IActionResult> GetCategoriesWithFilter([FromQuery] FilterParams filter)
+    {
+        var result = await categoryService.GetWithFilterAsync(filter);
+        return Ok(result);
+    }
+
     [AuthorizeMiddleware(["Admin"])]
     [HttpPost]
     public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDto categoryDto)

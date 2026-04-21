@@ -1,11 +1,13 @@
 ﻿using HStore.Application.DTOs;
+using HStore.Domain.Entities;
 
 namespace HStore.Application.Interfaces;
 
 /// <summary>
 /// Defines the interface for a service that manages Category operations.
 /// </summary>
-public interface ICategoryService
+public interface ICategoryService : IBaseService<CategoryDto>
+
 {
     /// <summary>
     /// Retrieves a collection of all categories.
