@@ -35,6 +35,17 @@ public class Startup(IConfiguration configuration)
         .AddDefaultTokenProviders();
 
         services.AddControllers();
+        // CORS configuration for development
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAllCors", builder =>
+            {
+                builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        });
         services.AddDbContext<HStoreDbContext>((serviceProvider, options) =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
                     sqlServerOptionsBuilder =>
@@ -137,6 +148,7 @@ public class Startup(IConfiguration configuration)
             app.UseSwaggerUI();
         }
         
+        app.UseCors("AllowAllCors");
         app.UseHttpsRedirection()
             .UseRouting()
             .UseAuthentication()
