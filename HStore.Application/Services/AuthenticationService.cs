@@ -47,6 +47,7 @@ public class AuthService(IUnitOfWork unitOfWork,
     /// <returns>True if registration was successful, false otherwise.</returns>
     public async Task<bool> RegisterAsync(RegisterDto newUser)
     {
+        newUser.Role = "User";
         if (await unitOfWork.Users.UserExistsAsync(newUser.Username))
         {
             return false;
