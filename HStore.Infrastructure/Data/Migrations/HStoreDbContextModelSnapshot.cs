@@ -61,7 +61,7 @@ namespace HStore.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", (string)null);
                 });
 
             modelBuilder.Entity("HStore.Domain.Entities.Cart", b =>
@@ -106,7 +106,7 @@ namespace HStore.Infrastructure.Data.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Carts");
+                    b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("HStore.Domain.Entities.CartItem", b =>
@@ -135,7 +135,7 @@ namespace HStore.Infrastructure.Data.Migrations
                     b.Property<string>("ProductName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProductVariantId")
+                    b.Property<int?>("ProductVariantId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -152,7 +152,7 @@ namespace HStore.Infrastructure.Data.Migrations
 
                     b.HasIndex("ProductVariantId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItems", (string)null);
                 });
 
             modelBuilder.Entity("HStore.Domain.Entities.Category", b =>
@@ -173,7 +173,7 @@ namespace HStore.Infrastructure.Data.Migrations
                     b.Property<Guid>("Guid")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Search")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -187,7 +187,7 @@ namespace HStore.Infrastructure.Data.Migrations
 
                     b.HasIndex("ParentCategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("HStore.Domain.Entities.Coupon", b =>
@@ -234,7 +234,7 @@ namespace HStore.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Coupons");
+                    b.ToTable("Coupons", (string)null);
                 });
 
             modelBuilder.Entity("HStore.Domain.Entities.Inventory", b =>
@@ -278,7 +278,7 @@ namespace HStore.Infrastructure.Data.Migrations
 
                     b.HasIndex("ProductVariantId");
 
-                    b.ToTable("Inventories");
+                    b.ToTable("Inventories", (string)null);
                 });
 
             modelBuilder.Entity("HStore.Domain.Entities.Order", b =>
@@ -342,7 +342,7 @@ namespace HStore.Infrastructure.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("HStore.Domain.Entities.OrderHistory", b =>
@@ -378,7 +378,7 @@ namespace HStore.Infrastructure.Data.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderHistory");
+                    b.ToTable("OrderHistory", (string)null);
                 });
 
             modelBuilder.Entity("HStore.Domain.Entities.OrderItem", b =>
@@ -421,7 +421,7 @@ namespace HStore.Infrastructure.Data.Migrations
 
                     b.HasIndex("ProductVariantId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("HStore.Domain.Entities.Product", b =>
@@ -464,7 +464,7 @@ namespace HStore.Infrastructure.Data.Migrations
                     b.Property<string>("LengthUnit")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Search")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -499,7 +499,46 @@ namespace HStore.Infrastructure.Data.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
+                });
+
+            modelBuilder.Entity("HStore.Domain.Entities.ProductMedia", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("Guid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("MediaId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MediaType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductVariantId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ProductVariantId");
+
+                    b.ToTable("ProductMedia", (string)null);
                 });
 
             modelBuilder.Entity("HStore.Domain.Entities.ProductVariant", b =>
@@ -548,7 +587,7 @@ namespace HStore.Infrastructure.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductVariants");
+                    b.ToTable("ProductVariants", (string)null);
                 });
 
             modelBuilder.Entity("HStore.Domain.Entities.ProductVariantOption", b =>
@@ -565,7 +604,7 @@ namespace HStore.Infrastructure.Data.Migrations
                     b.Property<Guid>("Guid")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Search")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -586,7 +625,7 @@ namespace HStore.Infrastructure.Data.Migrations
 
                     b.HasIndex("ProductVariantId");
 
-                    b.ToTable("ProductVariantOptions");
+                    b.ToTable("ProductVariantOptions", (string)null);
                 });
 
             modelBuilder.Entity("HStore.Domain.Entities.RefreshToken", b =>
@@ -622,7 +661,7 @@ namespace HStore.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RefreshTokens");
+                    b.ToTable("RefreshTokens", (string)null);
                 });
 
             modelBuilder.Entity("HStore.Domain.Entities.Review", b =>
@@ -661,7 +700,7 @@ namespace HStore.Infrastructure.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("HStore.Domain.Entities.Role", b =>
@@ -679,7 +718,7 @@ namespace HStore.Infrastructure.Data.Migrations
                     b.Property<Guid>("Guid")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Search")
+                    b.Property<string>("Name")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -884,13 +923,13 @@ namespace HStore.Infrastructure.Data.Migrations
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Search")
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserId", "LoginProvider", "Search");
+                    b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
@@ -928,9 +967,7 @@ namespace HStore.Infrastructure.Data.Migrations
 
                     b.HasOne("HStore.Domain.Entities.ProductVariant", "ProductVariant")
                         .WithMany()
-                        .HasForeignKey("ProductVariantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductVariantId");
 
                     b.Navigation("Cart");
 
@@ -1042,6 +1079,25 @@ namespace HStore.Infrastructure.Data.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("Seller");
+                });
+
+            modelBuilder.Entity("HStore.Domain.Entities.ProductMedia", b =>
+                {
+                    b.HasOne("HStore.Domain.Entities.Product", "Product")
+                        .WithMany("Medias")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HStore.Domain.Entities.ProductVariant", "ProductVariant")
+                        .WithMany("Medias")
+                        .HasForeignKey("ProductVariantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("ProductVariant");
                 });
 
             modelBuilder.Entity("HStore.Domain.Entities.ProductVariant", b =>
@@ -1168,6 +1224,8 @@ namespace HStore.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("HStore.Domain.Entities.Product", b =>
                 {
+                    b.Navigation("Medias");
+
                     b.Navigation("OrderItems");
 
                     b.Navigation("Reviews");
@@ -1177,6 +1235,8 @@ namespace HStore.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("HStore.Domain.Entities.ProductVariant", b =>
                 {
+                    b.Navigation("Medias");
+
                     b.Navigation("Options");
                 });
 

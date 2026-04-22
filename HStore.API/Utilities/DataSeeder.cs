@@ -1,23 +1,25 @@
 ﻿using HStore.Domain.Entities;
 using HStore.Domain.Enums;
 using HStore.Infrastructure.Data.Context;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace HStore.API.Utilities;
 
-public class DataSeeder(HStoreDbContext context)
+public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, RoleManager<Role> roleManager)
 {
     public async Task SeedAsync()
     {
         // 1. Seed Roles
         if (!await context.Roles.AnyAsync())
         {
-            await context.Roles.AddRangeAsync(
-                new Role { Name = "Admin" },
-                new Role { Name = "User" },
-                new Role { Name = "Seller" }
-            );
-            await context.SaveChangesAsync();
+            if(!await roleManager.RoleExistsAsync("Admin"))
+                await roleManager.CreateAsync(new() { Name= "Admin"});
+
+            if(!await roleManager.RoleExistsAsync("User"))
+                await roleManager.CreateAsync(new() { Name= "User"});
+            if(!await roleManager.RoleExistsAsync("Seller"))
+                await roleManager.CreateAsync(new() { Name= "Seller"});
         }
 
         // 2. Seed Categories
@@ -85,10 +87,10 @@ public class DataSeeder(HStoreDbContext context)
             {
                 UserName = "admin",
                 Email = "admin@HStore.com",
-                PasswordHash = "5v/JL+P4JDF4HXco6t2O7rKYMUSgJVlXCRDqFuJV20o=",
                 FirstName = "Admin",
                 LastName = "User",
                 PhoneNumber = "1234567890",
+                SecurityStamp = Guid.NewGuid().ToString(),
                 Address = new Address
                 {
                     Street = "123 Main St",
@@ -100,15 +102,18 @@ public class DataSeeder(HStoreDbContext context)
                 Role = "Admin",
                 // PasswordResetToken removed
             };
+            var res = await userManager.CreateAsync(admin, "admin_123");
+            await userManager.AddToRoleAsync(admin, "Admin");
+
 
             var user1 = new User
             {
                 UserName = "user1",
                 Email = "user1@HStore.com",
-                PasswordHash = "5v/JL+P4JDF4HXco6t2O7rKYMUSgJVlXCRDqFuJV20o=",
                 FirstName = "John",
                 LastName = "Doe",
                 PhoneNumber = "9876543210",
+                SecurityStamp = Guid.NewGuid().ToString(),
                 Address = new Address
                 {
                     Street = "456 Elm St",
@@ -120,15 +125,17 @@ public class DataSeeder(HStoreDbContext context)
                 Role = "User"
                 // PasswordResetToken removed
             }; 
+            await userManager.CreateAsync(user1, "user1_123");
+            await userManager.AddToRoleAsync(user1, "User");
 
             var user2 = new User
             {
                 UserName = "user2",
                 Email = "user2@HStore.com",
-                PasswordHash = "5v/JL+P4JDF4HXco6t2O7rKYMUSgJVlXCRDqFuJV20o=",
                 FirstName = "Jane",
                 LastName = "Smith",
                 PhoneNumber = "5551234567",
+                SecurityStamp = Guid.NewGuid().ToString(),
                 Address = new Address
                 {
                     Street = "789 Oak Ave",
@@ -140,15 +147,17 @@ public class DataSeeder(HStoreDbContext context)
                 Role = "User",
                 // PasswordResetToken = "1234567890"
             };
+            await userManager.CreateAsync(user2, "user2_123");
+            await userManager.AddToRoleAsync(user2, "User");
 
             var seller1 = new User
             {
                 UserName = "seller1",
                 Email = "seller1@HStore.com",
-                PasswordHash = "5v/JL+P4JDF4HXco6t2O7rKYMUSgJVlXCRDqFuJV20o=",
                 FirstName = "Bob",
                 LastName = "Johnson",
                 PhoneNumber = "4445556667",
+                SecurityStamp = Guid.NewGuid().ToString(),
                 Address = new Address
                 {
                     Street = "1011 Pine St",
@@ -160,15 +169,17 @@ public class DataSeeder(HStoreDbContext context)
                 Role = "Seller",
                 Rating = 4
             };
+            await userManager.CreateAsync(seller1, "seller1_123");
+            await userManager.AddToRoleAsync(seller1, "Seller");
 
             var seller2 = new User
             {
                 UserName = "seller2",
                 Email = "seller2@HStore.com",
-                PasswordHash = "5v/JL+P4JDF4HXco6t2O7rKYMUSgJVlXCRDqFuJV20o=",
                 FirstName = "Alice",
                 LastName = "Williams",
                 PhoneNumber = "3334445556",
+                SecurityStamp = Guid.NewGuid().ToString(),
                 Address = new Address
                 {
                     Street = "1213 Maple Dr",
@@ -180,9 +191,9 @@ public class DataSeeder(HStoreDbContext context)
                 Role = "Seller",
                 Rating = 5
             };
+            await userManager.CreateAsync(seller2, "seller2_123");
+            await userManager.AddToRoleAsync(seller2, "Seller");
 
-            await context.Users.AddRangeAsync(admin, user1, user2, seller1, seller2);
-            await context.SaveChangesAsync();
         }
 
         // 4. Seed Products

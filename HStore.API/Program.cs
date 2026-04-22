@@ -1,5 +1,7 @@
 using HStore.API.Utilities;
+using HStore.Domain.Entities;
 using HStore.Infrastructure.Data.Context;
+using Microsoft.AspNetCore.Identity;
 
 namespace HStore.API;
 
@@ -14,7 +16,9 @@ public class Program
         using (var serviceScope = builder.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
         {
             var context = serviceScope.ServiceProvider.GetService<HStoreDbContext>();
-            var seeder = new DataSeeder(context!);
+            var userManager = serviceScope.ServiceProvider.GetService<UserManager<User>>();
+            var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<Role>>();
+            var seeder = new DataSeeder(context!, userManager, roleManager);
             await seeder.SeedAsync();
         }
         */

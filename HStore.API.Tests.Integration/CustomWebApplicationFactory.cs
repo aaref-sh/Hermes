@@ -42,14 +42,14 @@ public class CustomWebApplicationFactory<TStartup>
                 options.ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning));
             });
             
-            // Seed data
-            services.AddScoped(sp =>
-            {
-                var configuration = sp.GetRequiredService<IConfiguration>();
-                services.AddSettings(configuration);
-                var context = sp.GetRequiredService<HStoreDbContext>();
-                return new DataSeeder(context);
-            });
+            //// Seed data
+            //services.AddScoped(sp =>
+            //{
+            //    var configuration = sp.GetRequiredService<IConfiguration>();
+            //    services.AddSettings(configuration);
+            //    var context = sp.GetRequiredService<HStoreDbContext>();
+            //    return new DataSeeder(context);
+            //});
         });
         
         

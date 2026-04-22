@@ -65,6 +65,7 @@ public class AuthService(IUnitOfWork unitOfWork,
             LastName = newUser.LastName,
             PhoneNumber = newUser.PhoneNumber,
             Role = newUser.Role,
+            SecurityStamp = Guid.NewGuid().ToString(),
             Address = mapper.Map<Address>(newUser.Address),
         };
 
