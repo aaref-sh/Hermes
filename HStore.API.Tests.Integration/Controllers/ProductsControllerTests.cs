@@ -384,7 +384,7 @@ public class ProductsControllerTests(CustomWebApplicationFactory<Program> factor
         const int productId = 1;
         var updatedProduct = new UpdateProductDto
         {
-            Name = "Updated Product Name",
+            Name = "Updated Product Search",
             Description = "Updated product description.",
             Price = 24.99m,
             ImageUrl = "https://example.com/updated-product.jpg"
@@ -414,7 +414,7 @@ public class ProductsControllerTests(CustomWebApplicationFactory<Program> factor
         const int productId = 1;
         var updatedProduct = new UpdateProductDto
         {
-            Name = "Updated Product Name from Seller",
+            Name = "Updated Product Search from Seller",
             Description = "Updated product description from seller.",
             Price = 24.99m,
             ImageUrl = "https://example.com/updated-product-seller.jpg"
@@ -444,7 +444,7 @@ public class ProductsControllerTests(CustomWebApplicationFactory<Program> factor
         const int productId = 1;
         var updatedProduct = new UpdateProductDto
         {
-            Name = "Updated Product Name from User",
+            Name = "Updated Product Search from User",
             Description = "Updated product description from user.",
             Price = 24.99m,
             ImageUrl = "https://example.com/updated-product-user.jpg"
@@ -464,7 +464,7 @@ public class ProductsControllerTests(CustomWebApplicationFactory<Program> factor
         const int productId = 1;
         var updatedProduct = new UpdateProductDto
         {
-            Name = "Updated Product Name",
+            Name = "Updated Product Search",
             Description = "Updated product description.",
             Price = 24.99m,
             ImageUrl = "https://example.com/updated-product.jpg"

@@ -1,13 +1,15 @@
 ﻿using HStore.API.Attributes;
 using HStore.Application.DTOs;
 using HStore.Application.Interfaces;
+using HStore.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HStore.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class CategoriesController(ICategoryService categoryService) : ControllerBaseEx
+public class CategoriesController(ICategoryService categoryService) 
+    : BaseController<Category, CategoryDto, ICategoryService>(categoryService)
 {
     [HttpGet]
     public async Task<IActionResult> GetAllCategories()
@@ -30,12 +32,6 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         return Ok(subcategories);
     }
 
-    [HttpGet("All")]
-    public async Task<IActionResult> GetCategoriesWithFilter([FromQuery] FilterParams filter)
-    {
-        var result = await categoryService.GetWithFilterAsync(filter);
-        return Ok(result);
-    }
 
     [AuthorizeMiddleware(["Admin"])]
     [HttpPost]

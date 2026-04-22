@@ -1,5 +1,9 @@
-﻿using System.Security.Claims;
+﻿using HStore.Application.DTOs;
+using HStore.Application.Interfaces;
+using HStore.Application.Services;
+using HStore.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace HStore.API.Controllers;
 
@@ -42,4 +46,19 @@ public class ControllerBaseEx : ControllerBase
             return claim;
         }
     }
+}
+
+public class BaseController<T, TDto, IService> (IService service) : ControllerBaseEx
+    where T : class, IBaseEntity
+    where TDto : class
+    where IService : IBaseService<T>
+{
+
+    [HttpGet("All")]
+    public async Task<IActionResult> GetCategoriesWithFilter([FromQuery] BaseFilter<T> filter)
+    {
+        var result = await service.GetWithFilterAsync<TDto>(filter);
+        return Ok(result);
+    }
+
 }

@@ -176,7 +176,7 @@ namespace HStore.Infrastructure.Data.Migrations
                     b.Property<Guid>("Guid")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Search")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -467,7 +467,7 @@ namespace HStore.Infrastructure.Data.Migrations
                     b.Property<string>("LengthUnit")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Search")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -568,7 +568,7 @@ namespace HStore.Infrastructure.Data.Migrations
                     b.Property<Guid>("Guid")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Search")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -679,7 +679,7 @@ namespace HStore.Infrastructure.Data.Migrations
                     b.Property<Guid>("Guid")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Search")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -890,13 +890,13 @@ namespace HStore.Infrastructure.Data.Migrations
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Search")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserId", "LoginProvider", "Name");
+                    b.HasKey("UserId", "LoginProvider", "Search");
 
                     b.ToTable("AspNetUserTokens", (string)null);
                 });

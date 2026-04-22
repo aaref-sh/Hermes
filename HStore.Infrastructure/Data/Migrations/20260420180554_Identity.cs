@@ -170,7 +170,7 @@ namespace HStore.Infrastructure.Data.Migrations
                 defaultValue: false);
 
             migrationBuilder.AlterColumn<string>(
-                name: "Name",
+                name: "Search",
                 table: "AspNetRoles",
                 type: "nvarchar(256)",
                 maxLength: 256,
@@ -563,7 +563,7 @@ namespace HStore.Infrastructure.Data.Migrations
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
             migrationBuilder.AlterColumn<string>(
-                name: "Name",
+                name: "Search",
                 table: "Roles",
                 type: "nvarchar(max)",
                 nullable: false,

@@ -6,7 +6,7 @@ namespace HStore.Application.Interfaces;
 /// <summary>
 /// Defines the interface for a service that manages Category operations.
 /// </summary>
-public interface ICategoryService : IBaseService<CategoryDto>
+public interface ICategoryService : IBaseService<Category>
 
 {
     /// <summary>

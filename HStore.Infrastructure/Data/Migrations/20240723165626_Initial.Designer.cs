@@ -176,7 +176,7 @@ namespace HStore.Infrastructure.Data.Migrations
                     b.Property<Guid>("Guid")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Search")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -467,7 +467,7 @@ namespace HStore.Infrastructure.Data.Migrations
                     b.Property<string>("LengthUnit")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Search")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -568,7 +568,7 @@ namespace HStore.Infrastructure.Data.Migrations
                     b.Property<Guid>("Guid")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Search")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -678,7 +678,7 @@ namespace HStore.Infrastructure.Data.Migrations
                     b.Property<Guid>("Guid")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Search")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
