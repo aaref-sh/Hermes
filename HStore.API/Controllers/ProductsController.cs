@@ -1,13 +1,15 @@
 ﻿using HStore.API.Attributes;
 using HStore.Application.DTOs;
 using HStore.Application.Interfaces;
+using HStore.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HStore.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ProductsController(IProductService productService, IImageHelper imageHelper) : ControllerBaseEx
+public class ProductsController(IProductService productService, IImageHelper imageHelper) 
+    : BaseController<Product, ProductDto, IProductService>(productService)
 {
     [HttpGet]
     public async Task<IActionResult> GetAllProducts(

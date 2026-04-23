@@ -1,11 +1,12 @@
 ﻿using HStore.Application.DTOs;
+using HStore.Domain.Entities;
 
 namespace HStore.Application.Interfaces;
 
 /// <summary>
 /// Defines the interface for a service that manages Product operations.
 /// </summary>
-public interface IProductService
+public interface IProductService : IBaseService<Product>
 {
     /// <summary>
     /// Retrieves a paged collection of all products.
