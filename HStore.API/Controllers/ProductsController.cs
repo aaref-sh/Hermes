@@ -157,8 +157,7 @@ public class ProductsController(IProductService productService, IImageHelper ima
         }
 
         var imageUrl =
-            await imageHelper.ProcessAndUploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName,
-                "products-images");
+            await imageHelper.ProcessAndUploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName);
         return Ok(new { ImageUrl = imageUrl });
     }
 }

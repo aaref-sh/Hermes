@@ -50,7 +50,7 @@ public static class ServiceExtensions
     /// <returns>The service collection with added services.</returns>
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
-        services.AddScoped<ICloudStorageHelper, CloudStorageHelper>();
+        services.AddScoped<IFileStorageHelper, LocalStorageHelper>();
         services.AddScoped<IImageHelper, ImageHelper>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ICartService, CartService>();
@@ -78,7 +78,7 @@ public static class ServiceExtensions
     {
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
         services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
-        services.Configure<AzureStorageSettings>(configuration.GetSection("AzureStorageSettings"));
+        services.Configure<LocalStorageSettings>(configuration.GetSection("LocalStorageSettings"));
         services.Configure<StripeSettings>(configuration.GetSection("StripeSettings"));
         services.Configure<WarehouseAddressSettings>(configuration.GetSection("WarehouseAddress"));
         return services;

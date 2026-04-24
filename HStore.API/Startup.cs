@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using AutoValidationExtensions = SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions.ServiceCollectionExtensions;
 using System.Text;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 namespace HStore.API;
@@ -174,6 +175,10 @@ public class Startup(IConfiguration configuration)
             app.UseSwaggerUI();
         }
         
+        // Ensure local storage directory exists
+        var localStorageSettings = app.ApplicationServices.GetRequiredService<IOptions<HStore.Domain.Settings.LocalStorageSettings>>().Value;
+        Directory.CreateDirectory(localStorageSettings.BasePath);
+
         app.UseCors("AllowAllCors");
         app.UseHttpsRedirection()
             .UseRouting()

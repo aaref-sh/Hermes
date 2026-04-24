@@ -1,11 +1,11 @@
-﻿using HStore.Application.Interfaces;
+﻿﻿using HStore.Application.Interfaces;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
 
 namespace HStore.Infrastructure.Utilities;
 
-public class ImageHelper(ICloudStorageHelper cloudStorageHelper) : IImageHelper
+public class ImageHelper(IFileStorageHelper fileStorageHelper) : IImageHelper
 {
     /// <summary>
     /// Processes and uploads an image file to cloud storage.
@@ -17,7 +17,7 @@ public class ImageHelper(ICloudStorageHelper cloudStorageHelper) : IImageHelper
     /// The URL of the uploaded image in cloud storage.
     /// </returns>
     /// <exception cref="ArgumentException">Thrown if the provided image file is invalid.</exception>
-    public async Task<string> ProcessAndUploadImageAsync(Stream imageFile, string fileName, string folderName)
+    public async Task<string> ProcessAndUploadImageAsync(Stream imageFile, string fileName)
     {
         if (imageFile == null || imageFile.Length == 0)
         {
@@ -37,8 +37,6 @@ public class ImageHelper(ICloudStorageHelper cloudStorageHelper) : IImageHelper
         await image.SaveAsync(outputStream, new JpegEncoder());
 
         outputStream.Position = 0;
-        return await cloudStorageHelper.UploadFileAsync(outputStream,
-            fileName,
-            folderName);
+        return await fileStorageHelper.UploadFileAsync(outputStream, fileName);
     }
 }
