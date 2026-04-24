@@ -7,8 +7,8 @@ public class ProductDto
     public string Description { get; set; }
     public decimal Price { get; set; }
     public string ImageUrl { get; set; }
-    public int CategoryId { get; set; }
-    public string CategoryName { get; set; }
+    public List<int> CategoryIds { get; set; } = [];
+    public List<string> CategoryNames { get; set; } = [];
     public int SellerId { get; set; }
     public List<string> Tags { get; set; } = [];
     public List<ProductVariantDto> Variants { get; set; } = [];

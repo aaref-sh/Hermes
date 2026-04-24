@@ -39,9 +39,8 @@ public class MappingProfile : Profile
 
         // Product Mappings
         CreateMap<Product, ProductDto>()
-            .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name));
-        CreateMap<Product, ProductDto>()
-            .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
+            .ForMember(dest => dest.CategoryIds, opt => opt.MapFrom(src => src.Categories.Select(c => c.Id).ToList()))
+            .ForMember(dest => dest.CategoryNames, opt => opt.MapFrom(src => src.Categories.Select(c => c.Name).ToList()))
             .ForMember(dest => dest.Reviews, opt => opt.MapFrom(src => src.Reviews));
         CreateMap<CreateProductDto, Product>();
         CreateMap<UpdateProductDto, Product>();

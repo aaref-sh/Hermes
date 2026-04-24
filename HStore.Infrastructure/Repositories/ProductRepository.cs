@@ -20,7 +20,7 @@ public class ProductRepository(HStoreDbContext context) : GenericRepository<Prod
             .Include(p => p.Seller)
             .ThenInclude(x => x.Address)
             .Include(p => p.Reviews)
-            .Include(p => p.Category)
+            .Include(p => p.Categories)
             .Include(p => p.Variants)
             .FirstOrDefaultAsync(p => p.Id == id);
     }
@@ -37,7 +37,7 @@ public class ProductRepository(HStoreDbContext context) : GenericRepository<Prod
         return await Context.Set<Product>()
             .Include(x => x.Seller)
             .ThenInclude(x => x.Address)
-            .Include(x => x.Category)
+            .Include(x => x.Categories)
             .Include(x => x.Variants)
             .Where(x => ids.Contains(x.Id))
             .ToListAsync();
@@ -53,7 +53,7 @@ public class ProductRepository(HStoreDbContext context) : GenericRepository<Prod
         return Context.Products
             .Include(p => p.Seller)
             .ThenInclude(x => x.Address)
-            .Where(p => p.CategoryId == categoryId);
+            .Where(p => p.Categories.Any(c => c.Id == categoryId));
     }
 
     /// <summary>
@@ -173,7 +173,7 @@ public class ProductRepository(HStoreDbContext context) : GenericRepository<Prod
 
         if (categoryId.HasValue)
         {
-            query = query.Where(p => p.CategoryId == categoryId.Value);
+            query = query.Where(p => p.Categories.Any(c => c.Id == categoryId.Value));
         }
 
         if (minPrice.HasValue)

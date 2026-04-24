@@ -34,13 +34,6 @@ public class HStoreDbContext(DbContextOptions<HStoreDbContext> options) : Identi
     {
         base.OnModelCreating(modelBuilder);
 
-        // Product - Category (One-to-Many)
-        modelBuilder.Entity<Product>()
-            .HasOne(p => p.Category)
-            .WithMany(c => c.Products)
-            .HasForeignKey(p => p.CategoryId)
-            .OnDelete(DeleteBehavior.Restrict);
-
         // ProductVariant - Product (Many-to-One)
         modelBuilder.Entity<ProductVariant>()
             .HasOne(pv => pv.Product)

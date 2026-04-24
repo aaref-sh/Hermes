@@ -199,6 +199,17 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
         // 4. Seed Products
         if (!await context.Products.AnyAsync())
         {
+            var smartphonesCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name == "Smartphones");
+            var laptopsCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name == "Laptops");
+            var womensWearCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name == "Women's Wear");
+            var mensWearCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name == "Men's Wear");
+            var furnitureCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name == "Furniture");
+            var decorCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name == "Decor");
+            var booksCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name == "Books");
+
+            var seller1 = await context.Users.FirstOrDefaultAsync(u => u.UserName == "seller1");
+            var seller2 = await context.Users.FirstOrDefaultAsync(u => u.UserName == "seller2");
+
             // Electronics
             var iphone14Pro = new Product
             {
@@ -216,8 +227,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                 LengthUnit = "cm",
                 Tags = new List<string> { "Apple", "Smartphone", "Pro", "Camera", "A16 Bionic" },
                 HostedAt = HostedAt.Store,
-                CategoryId = (await context.Categories.FirstOrDefaultAsync(c => c.Name == "Smartphones"))!.Id,
-                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.UserName == "seller1"))!.Id
+                Categories = new List<Category> { smartphonesCategory! },
+                SellerId = seller1!.Id
             };
 
             var macbookPro = new Product
@@ -236,8 +247,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                 LengthUnit = "cm",
                 Tags = new List<string> { "Apple", "Laptop", "Pro", "M2 Pro", "Retina" },
                 HostedAt = HostedAt.Store,
-                CategoryId = (await context.Categories.FirstOrDefaultAsync(c => c.Name == "Laptops"))!.Id,
-                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.UserName == "seller2"))!.Id
+                Categories = new List<Category> { laptopsCategory! },
+                SellerId = seller2!.Id
             };
 
             // Fashion
@@ -257,8 +268,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                 LengthUnit = "cm",
                 Tags = new List<string> { "Women", "Dress", "Summer", "Floral", "Fashion" },
                 HostedAt = HostedAt.Store,
-                CategoryId = (await context.Categories.FirstOrDefaultAsync(c => c.Name == "Women's Wear"))!.Id,
-                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.UserName == "seller1"))!.Id
+                Categories = new List<Category> { womensWearCategory! },
+                SellerId = seller1.Id
             };
 
             var mensShirt = new Product
@@ -277,8 +288,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                 LengthUnit = "cm",
                 Tags = new List<string> { "Men", "Shirt", "Cotton", "Classic", "Fashion" },
                 HostedAt = HostedAt.Store,
-                CategoryId = (await context.Categories.FirstOrDefaultAsync(c => c.Name == "Men's Wear"))!.Id,
-                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.UserName == "seller2"))!.Id
+                Categories = new List<Category> { mensWearCategory! },
+                SellerId = seller2.Id
             };
 
             // Home
@@ -298,8 +309,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                 LengthUnit = "cm",
                 Tags = new List<string> { "Sofa", "Leather", "Modern", "Furniture", "Home" },
                 HostedAt = HostedAt.Store,
-                CategoryId = (await context.Categories.FirstOrDefaultAsync(c => c.Name == "Furniture"))!.Id,
-                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.UserName == "seller1"))!.Id
+                Categories = new List<Category> { furnitureCategory! },
+                SellerId = seller1.Id
             };
 
             var lamp = new Product
@@ -318,8 +329,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                 LengthUnit = "cm",
                 Tags = new List<string> { "Lamp", "Table", "Decor", "Lighting", "Home" },
                 HostedAt = HostedAt.Store,
-                CategoryId = (await context.Categories.FirstOrDefaultAsync(c => c.Name == "Decor"))!.Id,
-                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.UserName == "seller2"))!.Id
+                Categories = new List<Category> { decorCategory! },
+                SellerId = seller2.Id
             };
 
             // Books
@@ -339,8 +350,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                 LengthUnit = "cm",
                 Tags = new List<string> { "Fiction", "Classic", "Literature", "Books" },
                 HostedAt = HostedAt.Warehouse,
-                CategoryId = (await context.Categories.FirstOrDefaultAsync(c => c.Name == "Books"))!.Id,
-                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.UserName == "seller1"))!.Id
+                Categories = new List<Category> { booksCategory! },
+                SellerId = seller1.Id
             };
 
             var nonFictionBook = new Product
@@ -359,8 +370,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                 LengthUnit = "cm",
                 Tags = new List<string> { "Non-Fiction", "History", "Humanity", "Books" },
                 HostedAt = HostedAt.Warehouse,
-                CategoryId = (await context.Categories.FirstOrDefaultAsync(c => c.Name == "Books"))!.Id,
-                SellerId = (await context.Users.FirstOrDefaultAsync(u => u.UserName == "seller2"))!.Id
+                Categories = new List<Category> { booksCategory! },
+                SellerId = seller2.Id
             };
 
             await context.Products.AddRangeAsync(iphone14Pro, macbookPro, womensDress, mensShirt, sofa, lamp,

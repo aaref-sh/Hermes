@@ -82,7 +82,7 @@ public class ProductsControllerTests(CustomWebApplicationFactory<Program> factor
         var products = await response.Content.ReadFromJsonAsync<PagedResult<ProductDto>>();
         Assert.NotNull(products);
         Assert.NotEmpty(products.Items);
-        Assert.Equal(products.Items.FirstOrDefault()!.CategoryId, categoryId);
+        Assert.Contains(categoryId, products.Items.FirstOrDefault()!.CategoryIds);
     }
 
     [Fact]
@@ -176,7 +176,7 @@ public class ProductsControllerTests(CustomWebApplicationFactory<Program> factor
             WidthUnit = "m",
             Length = 1.0,
             LengthUnit = "m",
-            CategoryId = 1,
+            CategoryIds = new List<int> { 1 },
             SellerId = 1,
             Variants = new List<ProductVariantDto>
             {
@@ -206,7 +206,7 @@ public class ProductsControllerTests(CustomWebApplicationFactory<Program> factor
         Assert.Equal(newProduct.Description, createdProduct.Description);
         Assert.Equal(newProduct.Price, createdProduct.Price);
         Assert.Equal(newProduct.ImageUrl, createdProduct.ImageUrl);
-        Assert.Equal(newProduct.CategoryId, createdProduct.CategoryId);
+        Assert.Contains(1, createdProduct.CategoryIds);
         Assert.Equal(newProduct.SellerId, createdProduct.SellerId);
         Assert.Single(createdProduct.Variants);
         Assert.Equal(newProduct.Variants.First().SKU, createdProduct.Variants[0].SKU);
@@ -240,7 +240,7 @@ public class ProductsControllerTests(CustomWebApplicationFactory<Program> factor
             WidthUnit = "m",
             Length = 2.0,
             LengthUnit = "m",
-            CategoryId = 1,
+            CategoryIds = new List<int> { 1 },
             SellerId = 4,
             Variants = new List<ProductVariantDto>
             {
@@ -270,7 +270,7 @@ public class ProductsControllerTests(CustomWebApplicationFactory<Program> factor
         Assert.Equal(newProduct.Description, createdProduct.Description);
         Assert.Equal(newProduct.Price, createdProduct.Price);
         Assert.Equal(newProduct.ImageUrl, createdProduct.ImageUrl);
-        Assert.Equal(newProduct.CategoryId, createdProduct.CategoryId);
+        Assert.Contains(1, createdProduct.CategoryIds);
         Assert.Equal(newProduct.SellerId, createdProduct.SellerId);
         Assert.Single(createdProduct.Variants);
         Assert.Equal(newProduct.Variants.First().SKU, createdProduct.Variants[0].SKU);
@@ -304,7 +304,7 @@ public class ProductsControllerTests(CustomWebApplicationFactory<Program> factor
             WidthUnit = "m",
             Length = 2.0,
             LengthUnit = "m",
-            CategoryId = 1,
+            CategoryIds = new List<int> { 1 },
             SellerId = 1,
             Variants = new List<ProductVariantDto>
             {
@@ -348,7 +348,7 @@ public class ProductsControllerTests(CustomWebApplicationFactory<Program> factor
             WidthUnit = "m",
             Length = 2.0,
             LengthUnit = "m",
-            CategoryId = 1,
+            CategoryIds = new List<int> { 1 },
             SellerId = 1,
             Variants = new List<ProductVariantDto>
             {

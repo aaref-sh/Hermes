@@ -21,8 +21,7 @@ public class Product : BaseEntity
     public HostedAt HostedAt { get; set; }
 
     // Navigation Properties
-    public int CategoryId { get; set; }
-    public Category Category { get; set; }
+    public ICollection<Category> Categories { get; set; } = [];
     public int SellerId { get; set; }
     public User Seller { get; set; }
     public ICollection<OrderItem> OrderItems { get; set; } = [];

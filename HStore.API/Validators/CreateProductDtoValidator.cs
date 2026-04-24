@@ -20,8 +20,8 @@ public class CreateProductDtoValidator : AbstractValidator<CreateProductDto>
         RuleFor(x => x.ImageUrl)
             .NotEmpty().WithMessage("Image URL is required.");
 
-        RuleFor(x => x.CategoryId)
-            .GreaterThan(0).WithMessage("Category ID is required.");
+        RuleFor(x => x.CategoryIds)
+            .NotEmpty().WithMessage("At least one category is required.");
 
         RuleForEach(x => x.Variants)
             .SetValidator(new ProductVariantDtoValidator());

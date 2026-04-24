@@ -14,7 +14,7 @@ public class CreateProductDto
     public string WidthUnit { get; set; }
     public double Length { get; set; }
     public string LengthUnit { get; set; }
-    public int CategoryId { get; set; }
+    public List<int> CategoryIds { get; set; } = [];
     public int SellerId { get; set; }
     public IEnumerable<ProductVariantDto> Variants { get; set; } = []; 
 }

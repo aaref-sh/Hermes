@@ -8,7 +8,7 @@ using HStore.Domain.Interfaces;
 namespace HStore.Application.Services;
 
 public class ProductService(IUnitOfWork unitOfWork, IInventoryService inventoryService, IMapper mapper)
-    : IProductService
+    : BaseService<Product, ProductDto>(unitOfWork.Products, mapper), IProductService
 {
     /// <summary>
     /// Retrieves a paged collection of all products.
@@ -176,6 +176,13 @@ public class ProductService(IUnitOfWork unitOfWork, IInventoryService inventoryS
     public async Task<ProductDto?> CreateProductAsync(CreateProductDto productDto)
     {
         var product = mapper.Map<Product>(productDto);
+        
+        var categories = await unitOfWork.Categories.GetByIdsAsync(productDto.CategoryIds);
+        foreach (var category in categories)
+        {
+            product.Categories.Add(category);
+        }
+        
         await unitOfWork.Products.AddAsync(product);
         foreach (var variant in product.Variants)
         {
