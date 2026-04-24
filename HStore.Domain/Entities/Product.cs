@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using HStore.Domain.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace HStore.Domain.Entities;
 
@@ -30,12 +31,9 @@ public class Product : BaseEntity
     public ICollection<ProductMedia> Medias { get; set; } = [];
 }
 
-public class ProductMedia : BaseEntity
+[Owned]
+public class ProductMedia
 {
-    public Product Product { get; set; }
-    public int ProductId { get; set; }
-    public ProductVariant? ProductVariant { get; set; }
-    public int ProductVariantId { get; set; }
     public string MediaId { get; set; }
     public ProductMediaType MediaType { get; set; }
 }
