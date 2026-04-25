@@ -180,8 +180,11 @@ public class Startup(IConfiguration configuration)
         Directory.CreateDirectory(localStorageSettings.BasePath);
 
         app.UseCors("AllowAllCors");
-        app.UseHttpsRedirection()
-            .UseRouting()
+        if (!env.IsDevelopment())
+        {
+            app.UseHttpsRedirection();
+        }
+        app.UseRouting()
             .UseAuthentication()
             .UseAuthorization()
             .UseEndpoints(endpoints => { endpoints.MapControllers(); })
