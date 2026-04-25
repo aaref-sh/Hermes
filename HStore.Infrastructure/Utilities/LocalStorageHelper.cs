@@ -26,11 +26,10 @@ public class LocalStorageHelper(IOptions<LocalStorageSettings> localStorageSetti
     {
         var safeFileName = Path.GetFileName(fileName);
         var extension = Path.GetExtension(safeFileName);
-        var nameWithoutExt = Path.GetFileNameWithoutExtension(safeFileName);
         var prefix = GetPrefixFromExtension(extension);
         var folder = PrefixToFolderMap[prefix];
 
-        var uniqueFileName = $"{prefix}_{Guid.NewGuid()}_{nameWithoutExt}";
+        var uniqueFileName = $"{prefix}_{Guid.NewGuid()}";
         var folderPath = Path.Combine(_settings.BasePath, folder);
         var filePath = Path.Combine(folderPath, uniqueFileName);
 
@@ -39,7 +38,7 @@ public class LocalStorageHelper(IOptions<LocalStorageSettings> localStorageSetti
         await using var fileStreamOutput = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 81920, true);
         await fileStream.CopyToAsync(fileStreamOutput);
 
-        return $"{_settings.PublicUrl.TrimEnd('/')}/{uniqueFileName}";
+        return uniqueFileName;
     }
 
     /// <summary>
@@ -63,10 +62,8 @@ public class LocalStorageHelper(IOptions<LocalStorageSettings> localStorageSetti
     /// <param name="fileName">The file name (e.g., img_guid_name.jpg).</param>
     public string GetPhysicalPath(string fileName)
     {
-        var sanitizedName = fileName.Replace("..", "").Replace("\\", "/").TrimStart('/');
-        var prefix = sanitizedName.Split('_')[0];
-        var folder = PrefixToFolderMap.TryGetValue(prefix, out var f) ? f : "Other";
-        return Path.Combine(_settings.BasePath, folder, sanitizedName);
+        var folder = PrefixToFolderMap.TryGetValue(fileName.Split('_')[0], out var f) ? f : "Other";
+        return Path.Combine(_settings.BasePath, folder, fileName);
     }
 
     /// <summary>

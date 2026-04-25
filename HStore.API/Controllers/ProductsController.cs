@@ -174,7 +174,7 @@ public class ProductsController(IProductService productService, IImageHelper ima
     }
 
     [AuthorizeMiddleware(["Admin", "Seller"])]
-    [HttpDelete("{productId:int}/media/{mediaId}")]
+    [HttpDelete("{productId:int}/media/{*mediaId}")]
     public async Task<IActionResult> RemoveProductMedia(int productId, string mediaId)
     {
         var product = await productService.GetProductByIdAsync(productId);
@@ -198,7 +198,7 @@ public class ProductsController(IProductService productService, IImageHelper ima
     }
 
     [AuthorizeMiddleware(["Admin", "Seller"])]
-    [HttpDelete("variants/{variantId:int}/media/{mediaId}")]
+    [HttpDelete("variants/{variantId:int}/media/{*mediaId}")]
     public async Task<IActionResult> RemoveVariantMedia(int variantId, string mediaId)
     {
         var product = await productService.GetProductByVariantIdAsync(variantId);
