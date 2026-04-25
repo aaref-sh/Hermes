@@ -51,7 +51,8 @@ public class FilesController(IFileStorageHelper fileStorageHelper) : ControllerB
 
         var fileInfo = new FileInfo(physicalPath);
         var lastModified = fileInfo.LastWriteTimeUtc;
-        var etag = GenerateETag(filePath, lastModified, fileInfo.Length);
+        var etag = $"\"{GenerateETag(filePath, lastModified, fileInfo.Length)}\"";
+
 
         // Check If-None-Match (ETag)
         var requestETag = Request.Headers.IfNoneMatch.FirstOrDefault();
@@ -77,7 +78,10 @@ public class FilesController(IFileStorageHelper fileStorageHelper) : ControllerB
         var entityTag = new EntityTagHeaderValue(etag, false);
 
         // For media files, enable range processing for optimal streaming
-        var enableRangeProcessing = IsMediaFile(contentType);
+        var enableRangeProcessing = IsMediaFile(filePath);
+
+        var fileStream = new FileStream(physicalPath, FileMode.Open, FileAccess.Read);
+        var res = File(fileStream: fileStream, contentType: contentType, fileDownloadName: filePath + "",new(lastModified), entityTag, enableRangeProcessing);
 
         var result = new PhysicalFileResult(physicalPath, contentType)
         {
@@ -90,7 +94,7 @@ public class FilesController(IFileStorageHelper fileStorageHelper) : ControllerB
         Response.Headers.Append(HeaderNames.CacheControl, "public, max-age=31536000, immutable");
         Response.Headers.Append(HeaderNames.Vary, "Accept-Encoding");
 
-        return result;
+        return res;
     }
 
     /// <summary>
@@ -118,8 +122,8 @@ public class FilesController(IFileStorageHelper fileStorageHelper) : ControllerB
 
     private static bool IsMediaFile(string contentType)
     {
-        return contentType.StartsWith("video/", StringComparison.OrdinalIgnoreCase) ||
-               contentType.StartsWith("audio/", StringComparison.OrdinalIgnoreCase);
+        return contentType.StartsWith("vid", StringComparison.OrdinalIgnoreCase) ||
+               contentType.StartsWith("aud", StringComparison.OrdinalIgnoreCase) || 
+               contentType.StartsWith("img", StringComparison.OrdinalIgnoreCase);
     }
 }
-

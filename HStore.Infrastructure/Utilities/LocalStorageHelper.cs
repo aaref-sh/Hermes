@@ -30,7 +30,7 @@ public class LocalStorageHelper(IOptions<LocalStorageSettings> localStorageSetti
         var prefix = GetPrefixFromExtension(extension);
         var folder = PrefixToFolderMap[prefix];
 
-        var uniqueFileName = $"{prefix}_{Guid.NewGuid()}_{nameWithoutExt}{extension}";
+        var uniqueFileName = $"{prefix}_{Guid.NewGuid()}_{nameWithoutExt}";
         var folderPath = Path.Combine(_settings.BasePath, folder);
         var filePath = Path.Combine(folderPath, uniqueFileName);
 
