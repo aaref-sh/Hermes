@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+﻿﻿using FluentValidation;
 using HStore.Application.DTOs;
 
 namespace HStore.API.Validators;
@@ -19,5 +19,9 @@ public class UpdateProductDtoValidator : AbstractValidator<UpdateProductDto>
 
         RuleFor(x => x.ImageUrl)
             .MaximumLength(500).WithMessage("Image URL cannot exceed 500 characters.");
+
+        RuleForEach(x => x.CategoryIds)
+            .GreaterThan(0).WithMessage("Category ID must be greater than 0.")
+            .When(x => x.CategoryIds != null);
     }
 }

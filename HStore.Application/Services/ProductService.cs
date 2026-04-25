@@ -208,6 +208,17 @@ public class ProductService(IUnitOfWork unitOfWork, IInventoryService inventoryS
         }
 
         mapper.Map(productDto, product);
+
+        if (productDto.CategoryIds != null)
+        {
+            product.Categories.Clear();
+            var categories = await unitOfWork.Categories.GetByIdsAsync(productDto.CategoryIds);
+            foreach (var category in categories)
+            {
+                product.Categories.Add(category);
+            }
+        }
+
         await unitOfWork.Products.UpdateAsync(product);
         foreach (var variant in product.Variants)
         {
