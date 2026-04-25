@@ -160,4 +160,52 @@ public class ProductsController(IProductService productService, IImageHelper ima
             await imageHelper.ProcessAndUploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName);
         return Ok(new { ImageUrl = imageUrl });
     }
+
+    [AuthorizeMiddleware(["Admin", "Seller"])]
+    [HttpPost("{productId:int}/media")]
+    public async Task<IActionResult> AddProductMedia(int productId, [FromBody] ProductMediaDto mediaDto)
+    {
+        var product = await productService.GetProductByIdAsync(productId);
+        if (product == null || (product.SellerId != CurrentUserId && CurrentUserRole != "Admin"))
+            return Forbid();
+
+        await productService.AddProductMediaAsync(productId, mediaDto);
+        return NoContent();
+    }
+
+    [AuthorizeMiddleware(["Admin", "Seller"])]
+    [HttpDelete("{productId:int}/media/{mediaId}")]
+    public async Task<IActionResult> RemoveProductMedia(int productId, string mediaId)
+    {
+        var product = await productService.GetProductByIdAsync(productId);
+        if (product == null || (product.SellerId != CurrentUserId && CurrentUserRole != "Admin"))
+            return Forbid();
+
+        await productService.RemoveProductMediaAsync(productId, mediaId);
+        return NoContent();
+    }
+
+    [AuthorizeMiddleware(["Admin", "Seller"])]
+    [HttpPost("variants/{variantId:int}/media")]
+    public async Task<IActionResult> AddVariantMedia(int variantId, [FromBody] ProductMediaDto mediaDto)
+    {
+        var product = await productService.GetProductByVariantIdAsync(variantId);
+        if (product == null || (product.SellerId != CurrentUserId && CurrentUserRole != "Admin"))
+            return Forbid();
+
+        await productService.AddVariantMediaAsync(variantId, mediaDto);
+        return NoContent();
+    }
+
+    [AuthorizeMiddleware(["Admin", "Seller"])]
+    [HttpDelete("variants/{variantId:int}/media/{mediaId}")]
+    public async Task<IActionResult> RemoveVariantMedia(int variantId, string mediaId)
+    {
+        var product = await productService.GetProductByVariantIdAsync(variantId);
+        if (product == null || (product.SellerId != CurrentUserId && CurrentUserRole != "Admin"))
+            return Forbid();
+
+        await productService.RemoveVariantMediaAsync(variantId, mediaId);
+        return NoContent();
+    }
 }

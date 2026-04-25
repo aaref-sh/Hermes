@@ -50,6 +50,10 @@ public class MappingProfile : Profile
         CreateMap<CreateProductVariantDto, ProductVariant>();
         CreateMap<UpdateProductVariantDto, ProductVariant>();
 
+        // Product Media Mappings
+        CreateMap<ProductMedia, ProductMediaDto>()
+            .ForMember(dest => dest.MediaType, opt => opt.MapFrom(src => src.MediaType.ToString()));
+
         // Product Variant Option Mappings
         CreateMap<ProductVariantOption, ProductVariantOptionDto>().ReverseMap();
 

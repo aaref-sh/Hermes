@@ -13,4 +13,5 @@ public class ProductDto
     public List<string> Tags { get; set; } = [];
     public List<ProductVariantDto> Variants { get; set; } = [];
     public List<ReviewDto> Reviews { get; set; } = [];
+    public List<ProductMediaDto> Medias { get; set; } = [];
 }

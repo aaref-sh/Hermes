@@ -3,6 +3,7 @@ using HStore.Application.DTOs;
 using HStore.Application.Exceptions;
 using HStore.Application.Interfaces;
 using HStore.Domain.Entities;
+using HStore.Domain.Enums;
 using HStore.Domain.Interfaces;
 
 namespace HStore.Application.Services;
@@ -349,5 +350,63 @@ public class ProductService(IUnitOfWork unitOfWork, IInventoryService inventoryS
         }
 
         await unitOfWork.Products.DeleteProductVariantAsync(variant);
+    }
+
+    public async Task AddProductMediaAsync(int productId, ProductMediaDto mediaDto)
+    {
+        var product = await unitOfWork.Products.GetByIdAsync(productId);
+        if (product == null)
+            throw new NotFoundException("Product not found.");
+
+        var media = new ProductMedia
+        {
+            MediaId = mediaDto.MediaId,
+            MediaType = Enum.Parse<ProductMediaType>(mediaDto.MediaType, true)
+        };
+        product.Medias.Add(media);
+        await unitOfWork.Products.UpdateAsync(product);
+    }
+
+    public async Task RemoveProductMediaAsync(int productId, string mediaId)
+    {
+        var product = await unitOfWork.Products.GetByIdAsync(productId);
+        if (product == null)
+            throw new NotFoundException("Product not found.");
+
+        var media = product.Medias.FirstOrDefault(m => m.MediaId == mediaId);
+        if (media != null)
+        {
+            product.Medias.Remove(media);
+            await unitOfWork.Products.UpdateAsync(product);
+        }
+    }
+
+    public async Task AddVariantMediaAsync(int variantId, ProductMediaDto mediaDto)
+    {
+        var variant = await unitOfWork.Products.GetProductVariantByIdAsync(variantId);
+        if (variant == null)
+            throw new NotFoundException("Product variant not found.");
+
+        var media = new ProductMedia
+        {
+            MediaId = mediaDto.MediaId,
+            MediaType = Enum.Parse<ProductMediaType>(mediaDto.MediaType, true)
+        };
+        variant.Medias.Add(media);
+        await unitOfWork.Products.UpdateProductVariantAsync(variant);
+    }
+
+    public async Task RemoveVariantMediaAsync(int variantId, string mediaId)
+    {
+        var variant = await unitOfWork.Products.GetProductVariantByIdAsync(variantId);
+        if (variant == null)
+            throw new NotFoundException("Product variant not found.");
+
+        var media = variant.Medias.FirstOrDefault(m => m.MediaId == mediaId);
+        if (media != null)
+        {
+            variant.Medias.Remove(media);
+            await unitOfWork.Products.UpdateProductVariantAsync(variant);
+        }
     }
 }

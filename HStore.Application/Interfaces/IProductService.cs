@@ -137,4 +137,24 @@ public interface IProductService : IBaseService<Product>
     /// <param name="variantId">The ID of the product variant to delete.</param>
     /// <returns>A Task representing the asynchronous operation.</returns>
     Task DeleteProductVariantAsync(int variantId);
+
+    /// <summary>
+    /// Adds a media item to a product.
+    /// </summary>
+    Task AddProductMediaAsync(int productId, ProductMediaDto mediaDto);
+
+    /// <summary>
+    /// Removes a media item from a product.
+    /// </summary>
+    Task RemoveProductMediaAsync(int productId, string mediaId);
+
+    /// <summary>
+    /// Adds a media item to a product variant.
+    /// </summary>
+    Task AddVariantMediaAsync(int variantId, ProductMediaDto mediaDto);
+
+    /// <summary>
+    /// Removes a media item from a product variant.
+    /// </summary>
+    Task RemoveVariantMediaAsync(int variantId, string mediaId);
 }

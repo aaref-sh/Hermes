@@ -7,6 +7,7 @@ public class ProductVariantDto
     public string ImageUrl { get; set; }
     public decimal PriceAdjustment { get; set; } 
     public int Quantity { get; set; } 
-    public bool InStock { get; set; } 
+    public bool InStock { get; set; }
     public List<ProductVariantOptionDto> Options { get; set; } = [];
+    public List<ProductMediaDto> Medias { get; set; } = [];
 }

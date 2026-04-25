@@ -11,8 +11,8 @@ namespace HStore.Infrastructure.Data.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "ProductMedia");
+            //migrationBuilder.DropTable(
+            //    name: "ProductMedia");
 
             migrationBuilder.CreateTable(
                 name: "Products_Medias",
