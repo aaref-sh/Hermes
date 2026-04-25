@@ -18,6 +18,6 @@ public class UpdateProductDtoValidator : AbstractValidator<UpdateProductDto>
             .GreaterThan(0).WithMessage("Price must be greater than 0.");
 
         RuleFor(x => x.ImageUrl)
-            .NotEmpty().WithMessage("Image URL is required.");
+            .MaximumLength(500).WithMessage("Image URL cannot exceed 500 characters.");
     }
 }
