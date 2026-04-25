@@ -36,7 +36,11 @@ public class Startup(IConfiguration configuration)
         .AddEntityFrameworkStores<HStoreDbContext>()
         .AddDefaultTokenProviders();
 
-        services.AddControllers();
+        services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+            });
         // CORS configuration for development
         services.AddCors(options =>
         {

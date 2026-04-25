@@ -14,5 +14,8 @@ public class ProductVariantOptionDtoValidator : AbstractValidator<ProductVariant
         RuleFor(x => x.Value)
             .NotEmpty().WithMessage("Attribute value is required.")
             .MaximumLength(100).WithMessage("Attribute value cannot exceed 100 characters.");
+
+        RuleFor(x => x.Type)
+            .IsInEnum().WithMessage("Invalid option type.");
     }
 }

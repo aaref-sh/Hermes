@@ -55,7 +55,10 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.MediaType, opt => opt.MapFrom(src => src.MediaType.ToString()));
 
         // Product Variant Option Mappings
-        CreateMap<ProductVariantOption, ProductVariantOptionDto>().ReverseMap();
+        CreateMap<ProductVariantOption, ProductVariantOptionDto>()
+            .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.VariantOptionType));
+        CreateMap<ProductVariantOptionDto, ProductVariantOption>()
+            .ForMember(dest => dest.VariantOptionType, opt => opt.MapFrom(src => src.Type));
 
         // Review Mappings
         CreateMap<Review, ReviewDto>().ReverseMap();
