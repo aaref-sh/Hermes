@@ -55,7 +55,7 @@ public class BaseController<T, TDto, IService> (IService service) : ControllerBa
 {
 
     [HttpGet("All")]
-    public async Task<IActionResult> GetCategoriesWithFilter([FromQuery] BaseFilter<T> filter)
+    public virtual async Task<IActionResult> GetAllWithFilter([FromQuery] BaseFilter<T> filter)
     {
         var result = await service.GetWithFilterAsync<TDto>(filter);
         return Ok(result);

@@ -11,6 +11,13 @@ namespace HStore.API.Controllers;
 public class ProductsController(IProductService productService, IImageHelper imageHelper) 
     : BaseController<Product, ProductDto, IProductService>(productService)
 {
+    [HttpGet("All")]
+    public override async Task<IActionResult> GetAllWithFilter([FromQuery] BaseFilter<Product> filter)
+    {
+        var res = await productService.GetWithFilterAsync<ProductDto>(filter, ["Categories"]);
+        return Ok(res);
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetAllProducts(
         [FromQuery] int page = 1,

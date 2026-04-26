@@ -6,5 +6,5 @@ namespace HStore.Application.Interfaces;
 
 public interface IBaseService<T> where T : class, IBaseEntity
 {
-    Task<PagedResult<TDto>> GetWithFilterAsync<TDto>(BaseFilter<T> filter);
+    Task<PagedResult<TDto>> GetWithFilterAsync<TDto>(BaseFilter<T> filter, string[] includes = null);
 }

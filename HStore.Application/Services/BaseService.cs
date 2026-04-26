@@ -16,9 +16,10 @@ public abstract class BaseService<T, TDto>(IGenericRepository<T> repository, IMa
     protected readonly IGenericRepository<T> _repository = repository;
     protected readonly IMapper _mapper = mapper;
 
-    public async Task<PagedResult<TDto>> GetWithFilterAsync<TDto>(BaseFilter<T> filter)
+    public async Task<PagedResult<TDto>> GetWithFilterAsync<TDto>(BaseFilter<T> filter, string[] includes = null)
     {
         var query = _repository.GetAllAsync();
+        foreach (var include in includes ?? []) query = query.Include(include);
         var result = await filter.ApplyTo(query);
 
         var res = _mapper.Map<List<TDto>>(result.Items);
