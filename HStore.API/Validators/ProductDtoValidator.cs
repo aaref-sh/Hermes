@@ -7,7 +7,7 @@ public class ProductDtoValidator : AbstractValidator<ProductDto>
 {
     public ProductDtoValidator()
     {
-        RuleFor(x => x.Name)
+        RuleFor(x => x.Name.En)
             .NotEmpty().WithMessage("Product name is required.")
             .MaximumLength(200).WithMessage("Product name cannot exceed 200 characters.");
 

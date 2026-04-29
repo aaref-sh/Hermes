@@ -167,8 +167,8 @@ public class ProductRepository(HStoreDbContext context) : GenericRepository<Prod
 
         if (!string.IsNullOrEmpty(searchTerm))
         {
-            query = query.Where(p => p.Name.Contains(searchTerm) ||
-                                     p.Description.Contains(searchTerm));
+            query = query.Where(p => p.Name.En.Contains(searchTerm) || p.Name.Ar.Contains(searchTerm) ||
+                                     p.Description.En.Contains(searchTerm) || p.Description.Ar.Contains(searchTerm));
         }
 
         if (categoryId.HasValue)

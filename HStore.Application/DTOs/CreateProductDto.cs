@@ -1,9 +1,12 @@
-﻿namespace HStore.Application.DTOs;
+﻿using HStore.Domain.Classes;
+using HStore.Application.DTOs;
+
+namespace HStore.Application.DTOs;
 
 public class CreateProductDto
 {
-    public string Name { get; set; }
-    public string Description { get; set; }
+    public LocalizedProperty Name { get; set; } = new();
+    public LocalizedProperty Description { get; set; } = new();
     public decimal Price { get; set; }
     public string ImageUrl { get; set; }
     public double Weight { get; set; }

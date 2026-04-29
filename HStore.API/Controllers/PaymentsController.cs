@@ -50,7 +50,7 @@ public class PaymentsController(
 
                     return new CartCheckoutItemDto
                     {
-                        ProductName = product.Name,
+                        ProductName = product.Name.En,
                         Price = item.PriceAtPurchase,
                         Quantity = item.Quantity
                     };

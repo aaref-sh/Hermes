@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace HStore.Domain.Classes;
 
 [ComplexType]
-public class LocalizedProperty(string? ar = null, string? en = null)
+public class LocalizedProperty(string? en = null, string? ar = null)
 {
     public string? Ar { get; set; } = ar;
     public string? En { get; set; } = en;

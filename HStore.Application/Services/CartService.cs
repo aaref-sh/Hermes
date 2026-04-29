@@ -61,10 +61,10 @@ public class CartService(IUnitOfWork unitOfWork, IInventoryService inventoryServ
         }
         else
         {
-            cartItem = new CartItem
+cartItem = new CartItem
             {
                 CartId = cart.Id,
-                ProductName = product.Name,
+                ProductName = product.Name.GetByLocale("en"),
                 ProductId = productVariant.ProductId,
                 Quantity = quantity,
                 PriceAtPurchase = product.Price + productVariant.PriceAdjustment

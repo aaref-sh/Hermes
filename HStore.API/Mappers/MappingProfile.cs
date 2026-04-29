@@ -14,7 +14,7 @@ public class MappingProfile : Profile
         // Category Mappings
         CreateMap<Category, CategoryDto>()
             .ForMember(dest => dest.ParentCategoryName, 
-                       opt => opt.MapFrom(src => src.ParentCategory.Name));
+                       opt => opt.MapFrom(src => src.ParentCategory != null ? src.ParentCategory.Name: null));
         CreateMap<CreateCategoryDto, Category>();
         CreateMap<UpdateCategoryDto, Category>();
 
@@ -57,6 +57,7 @@ public class MappingProfile : Profile
         // Product Variant Option Mappings
         CreateMap<ProductVariantOption, ProductVariantOptionDto>()
             .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.VariantOptionType));
+
         CreateMap<ProductVariantOptionDto, ProductVariantOption>()
             .ForMember(dest => dest.VariantOptionType, opt => opt.MapFrom(src => src.Type));
 

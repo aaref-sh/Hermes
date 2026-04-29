@@ -25,10 +25,10 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
         // 2. Seed Categories
         if (!await context.Categories.AnyAsync())
         {
-            var electronics = new Category { Name = "Electronics", Description = "All things electronic" };
-            var fashion = new Category { Name = "Fashion", Description = "Clothing and accessories" };
-            var home = new Category { Name = "Home", Description = "Furniture, decor, and appliances" };
-            var books = new Category { Name = "Books", Description = "Fiction, non-fiction, and more" };
+            var electronics = new Category { Name = new("Electronics"), Description = new("All things electronic") };
+            var fashion = new Category { Name = new("Fashion"), Description = new("Clothing and accessories") };
+            var home = new Category { Name = new("Home"), Description = new("Furniture, decor, and appliances") };
+            var books = new Category { Name = new("Books"), Description = new("Fiction, non-fiction, and more") };
 
             await context.Categories.AddRangeAsync(electronics, fashion, home, books);
             await context.SaveChangesAsync();
@@ -36,43 +36,43 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
             // Seed Subcategories
             var smartphones = new Category
             {
-                Name = "Smartphones",
-                Description = "Latest smartphones from top brands",
+                Name = new("Smartphones"),
+                Description = new("Latest smartphones from top brands"),
                 ParentCategoryId = electronics.Id
             };
 
             var laptops = new Category
             {
-                Name = "Laptops",
-                Description = "High-performance laptops for work and play",
+                Name = new("Laptops"),
+                Description = new("High-performance laptops for work and play"),
                 ParentCategoryId = electronics.Id
             };
 
             var womenswear = new Category
             {
-                Name = "Women's Wear",
-                Description = "Trendy and stylish clothing for women",
+                Name = new("Women's Wear"),
+                Description = new("Trendy and stylish clothing for women"),
                 ParentCategoryId = fashion.Id
             };
 
             var menswear = new Category
             {
-                Name = "Men's Wear",
-                Description = "Classic and modern apparel for men",
+                Name = new("Men's Wear"),
+                Description = new("Classic and modern apparel for men"),
                 ParentCategoryId = fashion.Id
             };
 
             var furniture = new Category
             {
-                Name = "Furniture",
-                Description = "High-quality furniture for your home",
+                Name = new("Furniture"),
+                Description = new("High-quality furniture for your home"),
                 ParentCategoryId = home.Id
             };
 
             var decor = new Category
             {
-                Name = "Decor",
-                Description = "Decorative items for your home",
+                Name = new("Decor"),
+                Description = new("Decorative items for your home"),
                 ParentCategoryId = home.Id
             };
 
@@ -199,13 +199,13 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
         // 4. Seed Products
         if (!await context.Products.AnyAsync())
         {
-            var smartphonesCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name == "Smartphones");
-            var laptopsCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name == "Laptops");
-            var womensWearCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name == "Women's Wear");
-            var mensWearCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name == "Men's Wear");
-            var furnitureCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name == "Furniture");
-            var decorCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name == "Decor");
-            var booksCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name == "Books");
+            var smartphonesCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name.En == "Smartphones");
+            var laptopsCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name.En == "Laptops");
+            var womensWearCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name.En == "Women's Wear");
+            var mensWearCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name.En == "Men's Wear");
+            var furnitureCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name.En == "Furniture");
+            var decorCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name.En == "Decor");
+            var booksCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name.En == "Books");
 
             var seller1 = await context.Users.FirstOrDefaultAsync(u => u.UserName == "seller1");
             var seller2 = await context.Users.FirstOrDefaultAsync(u => u.UserName == "seller2");
@@ -213,8 +213,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
             // Electronics
             var iphone14Pro = new Product
             {
-                Name = "iPhone 14 Pro",
-                Description = "Apple's latest flagship smartphone with a powerful A16 Bionic chip.",
+                Name = new("iPhone 14 Pro"),
+                Description = new("Apple's latest flagship smartphone with a powerful A16 Bionic chip."),
                 Price = 999,
                 ImageUrl = "https://www.apple.com/v/iphone/home/images/hero/iphone_14_pro__b4r3f67v6s9g_large.jpg",
                 Weight = 0.22,
@@ -233,8 +233,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
 
             var macbookPro = new Product
             {
-                Name = "MacBook Pro",
-                Description = "Apple's most powerful laptop with an M2 Pro chip and a stunning Retina display.",
+                Name = new("MacBook Pro"),
+                Description = new("Apple's most powerful laptop with an M2 Pro chip and a stunning Retina display."),
                 Price = 1999,
                 ImageUrl = "https://www.apple.com/v/macbook-pro/home/images/hero/macbook_pro_14_inch__fm00w7k2p29k_large.jpg",
                 Weight = 1.6,
@@ -254,8 +254,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
             // Fashion
             var womensDress = new Product
             {
-                Name = "Summer Floral Dress",
-                Description = "A flowy and stylish floral dress for summer.",
+                Name = new("Summer Floral Dress"),
+                Description = new("A flowy and stylish floral dress for summer."),
                 Price = 49,
                 ImageUrl = "https://www.example.com/womens-dress.jpg",
                 Weight = 0.5,
@@ -274,8 +274,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
 
             var mensShirt = new Product
             {
-                Name = "Classic Cotton Shirt",
-                Description = "A comfortable and versatile cotton shirt for everyday wear.",
+                Name = new("Classic Cotton Shirt"),
+                Description = new("A comfortable and versatile cotton shirt for everyday wear."),
                 Price = 29,
                 ImageUrl = "https://www.example.com/mens-shirt.jpg",
                 Weight = 0.3,
@@ -295,8 +295,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
             // Home
             var sofa = new Product
             {
-                Name = "Modern Leather Sofa",
-                Description = "A stylish and comfortable leather sofa for your living room.",
+                Name = new("Modern Leather Sofa"),
+                Description = new("A stylish and comfortable leather sofa for your living room."),
                 Price = 1299,
                 ImageUrl = "https://www.example.com/leather-sofa.jpg",
                 Weight = 80,
@@ -315,8 +315,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
 
             var lamp = new Product
             {
-                Name = "Table Lamp",
-                Description = "A stylish and functional table lamp for your bedroom or living room.",
+                Name = new("Table Lamp"),
+                Description = new("A stylish and functional table lamp for your bedroom or living room."),
                 Price = 49,
                 ImageUrl = "https://www.example.com/table-lamp.jpg",
                 Weight = 2,
@@ -336,8 +336,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
             // Books
             var fictionBook = new Product
             {
-                Name = "The Great Gatsby",
-                Description = "A classic American novel by F. Scott Fitzgerald.",
+                Name = new("The Great Gatsby"),
+                Description = new("A classic American novel by F. Scott Fitzgerald."),
                 Price = 12.99m,
                 ImageUrl = "https://www.example.com/great-gatsby.jpg",
                 Weight = 0.3,
@@ -356,8 +356,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
 
             var nonFictionBook = new Product
             {
-                Name = "Sapiens",
-                Description = "A groundbreaking book that explores the history of humankind.",
+                Name = new("Sapiens"),
+                Description = new("A groundbreaking book that explores the history of humankind."),
                 Price = 19.99m,
                 ImageUrl = "https://www.example.com/sapiens.jpg",
                 Weight = 0.5,
@@ -391,8 +391,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Storage", Value = "128GB", VariantOptionType = VariantOptionType.Hardware},
-                        new() { Name = "Color", Value = "Blue", VariantOptionType = VariantOptionType.Color }
+                        new() { Name = new("Storage"), Value = "128GB", VariantOptionType = VariantOptionType.Hardware},
+                        new() { Name = new("Color"), Value = "Blue", VariantOptionType = VariantOptionType.Color }
                     }
                 },
                 new()
@@ -405,8 +405,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Storage", Value = "256GB", VariantOptionType = VariantOptionType.Hardware },
-                        new() { Name = "Color", Value = "Black", VariantOptionType = VariantOptionType.Color }
+                        new() { Name = new("Storage"), Value = "256GB", VariantOptionType = VariantOptionType.Hardware },
+                        new() { Name = new("Color"), Value = "Black", VariantOptionType = VariantOptionType.Color }
                     }
                 },
                 new()
@@ -419,8 +419,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Storage", Value = "512GB", VariantOptionType = VariantOptionType.Hardware },
-                        new() { Name = "Color", Value = "Silver", VariantOptionType = VariantOptionType.Color }
+                        new() { Name = new("Storage"), Value = "512GB", VariantOptionType = VariantOptionType.Hardware },
+                        new() { Name = new("Color"), Value = "Silver", VariantOptionType = VariantOptionType.Color }
                     }
                 }
             };
@@ -451,9 +451,9 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Processor", Value = "M2 Pro", VariantOptionType = VariantOptionType.Hardware },
-                        new() { Name = "Memory", Value = "16GB", VariantOptionType = VariantOptionType.Hardware },
-                        new() { Name = "Storage", Value = "512GB", VariantOptionType = VariantOptionType.Hardware }
+                        new() { Name = new("Processor"), Value = "M2 Pro", VariantOptionType = VariantOptionType.Hardware },
+                        new() { Name = new("Memory"), Value = "16GB", VariantOptionType = VariantOptionType.Hardware },
+                        new() { Name = new("Storage"), Value = "512GB", VariantOptionType = VariantOptionType.Hardware }
                     }
                 },
                 new()
@@ -466,9 +466,9 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Processor", Value = "M2 Pro", VariantOptionType = VariantOptionType.Hardware },
-                        new() { Name = "Memory", Value = "32GB", VariantOptionType = VariantOptionType.Hardware },
-                        new() { Name = "Storage", Value = "1TB", VariantOptionType = VariantOptionType.Hardware }
+                        new() { Name = new("Processor"), Value = "M2 Pro", VariantOptionType = VariantOptionType.Hardware },
+                        new() { Name = new("Memory"), Value = "32GB", VariantOptionType = VariantOptionType.Hardware },
+                        new() { Name = new("Storage"), Value = "1TB", VariantOptionType = VariantOptionType.Hardware }
                     }
                 }
             };
@@ -500,8 +500,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Size", Value = "S", VariantOptionType = VariantOptionType.Size },
-                        new() { Name = "Color", Value = "Red", VariantOptionType = VariantOptionType.Color }
+                        new() { Name = new("Size"), Value = "S", VariantOptionType = VariantOptionType.Size },
+                        new() { Name = new("Color"), Value = "Red", VariantOptionType = VariantOptionType.Color }
                     }
                 },
                 new()
@@ -514,8 +514,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Size", Value = "M", VariantOptionType = VariantOptionType.Size },
-                        new() { Name = "Color", Value = "Blue", VariantOptionType = VariantOptionType.Color }
+                        new() { Name = new("Size"), Value = "M", VariantOptionType = VariantOptionType.Size },
+                        new() { Name = new("Color"), Value = "Blue", VariantOptionType = VariantOptionType.Color }
                     }
                 },
                 new()
@@ -528,8 +528,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Size", Value = "L", VariantOptionType = VariantOptionType.Size },
-                        new() { Name = "Color", Value = "Green", VariantOptionType = VariantOptionType.Color }
+                        new() { Name = new("Size"), Value = "L", VariantOptionType = VariantOptionType.Size },
+                        new() { Name = new("Color"), Value = "Green", VariantOptionType = VariantOptionType.Color }
                     }
                 }
             };
@@ -561,8 +561,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Size", Value = "S", VariantOptionType = VariantOptionType.Size },
-                        new() { Name = "Color", Value = "White", VariantOptionType = VariantOptionType.Color }
+                        new() { Name = new("Size"), Value = "S", VariantOptionType = VariantOptionType.Size },
+                        new() { Name = new("Color"), Value = "White", VariantOptionType = VariantOptionType.Color }
                     }
                 },
                 new()
@@ -575,8 +575,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Size", Value = "M", VariantOptionType = VariantOptionType.Size },
-                        new() { Name = "Color", Value = "Blue", VariantOptionType = VariantOptionType.Color }
+                        new() { Name = new("Size"), Value = "M", VariantOptionType = VariantOptionType.Size },
+                        new() { Name = new("Color"), Value = "Blue", VariantOptionType = VariantOptionType.Color }
                     }
                 },
                 new()
@@ -589,8 +589,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Size", Value = "L", VariantOptionType = VariantOptionType.Size },
-                        new() { Name = "Color", Value = "Black", VariantOptionType = VariantOptionType.Color }
+                        new() { Name = new("Size"), Value = "L", VariantOptionType = VariantOptionType.Size },
+                        new() { Name = new("Color"), Value = "Black", VariantOptionType = VariantOptionType.Color }
                     }
                 }
             };
@@ -622,7 +622,7 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Color", Value = "Brown", VariantOptionType = VariantOptionType.Color }
+                        new() { Name = new("Color"), Value = "Brown", VariantOptionType = VariantOptionType.Color }
                     }
                 },
                 new()
@@ -635,7 +635,7 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Color", Value = "Black", VariantOptionType = VariantOptionType.Color }
+                        new() { Name = new("Color"), Value = "Black", VariantOptionType = VariantOptionType.Color }
                     }
                 }
             };
@@ -667,7 +667,7 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Color", Value = "Gold", VariantOptionType = VariantOptionType.Color }
+                        new() { Name = new("Color"), Value = "Gold", VariantOptionType = VariantOptionType.Color }
                     }
                 },
                 new()
@@ -680,7 +680,7 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Color", Value = "Silver", VariantOptionType = VariantOptionType.Color }
+                        new() { Name = new("Color"), Value = "Silver", VariantOptionType = VariantOptionType.Color }
                     }
                 }
             };
@@ -712,7 +712,7 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Format", Value = "Paperback", VariantOptionType = VariantOptionType.Custom }
+                        new() { Name = new("Format"), Value = "Paperback", VariantOptionType = VariantOptionType.Custom }
                     }
                 },
                 new()
@@ -725,7 +725,7 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Format", Value = "Hardcover", VariantOptionType = VariantOptionType.Custom }
+                        new() { Name = new("Format"), Value = "Hardcover", VariantOptionType = VariantOptionType.Custom }
                     }
                 }
             };
@@ -757,7 +757,7 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Format", Value = "Paperback", VariantOptionType = VariantOptionType.Custom }
+                        new() { Name = new("Format"), Value = "Paperback", VariantOptionType = VariantOptionType.Custom }
                     }
                 },
                 new()
@@ -770,7 +770,7 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
                     InStock = true,
                     Options = new List<ProductVariantOption>
                     {
-                        new() { Name = "Format", Value = "Hardcover", VariantOptionType = VariantOptionType.Custom }
+                        new() { Name = new("Format"), Value = "Hardcover", VariantOptionType = VariantOptionType.Custom }
                     }
                 }
             };
@@ -796,14 +796,14 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
         // 6. Seed Reviews
         if (!await context.Reviews.AnyAsync())
         {
-            var iphone14Pro = await context.Products.FirstOrDefaultAsync(p => p.Name == "iPhone 14 Pro");
-            var macbookPro = await context.Products.FirstOrDefaultAsync(p => p.Name == "MacBook Pro");
-            var womensDress = await context.Products.FirstOrDefaultAsync(p => p.Name == "Summer Floral Dress");
-            var mensShirt = await context.Products.FirstOrDefaultAsync(p => p.Name == "Classic Cotton Shirt");
-            var sofa = await context.Products.FirstOrDefaultAsync(p => p.Name == "Modern Leather Sofa");
-            var lamp = await context.Products.FirstOrDefaultAsync(p => p.Name == "Table Lamp");
-            var fictionBook = await context.Products.FirstOrDefaultAsync(p => p.Name == "The Great Gatsby");
-            var nonFictionBook = await context.Products.FirstOrDefaultAsync(p => p.Name == "Sapiens");
+            var iphone14Pro = await context.Products.FirstOrDefaultAsync(p => p.Name.En == "iPhone 14 Pro");
+            var macbookPro = await context.Products.FirstOrDefaultAsync(p => p.Name.En == "MacBook Pro");
+            var womensDress = await context.Products.FirstOrDefaultAsync(p => p.Name.En == "Summer Floral Dress");
+            var mensShirt = await context.Products.FirstOrDefaultAsync(p => p.Name.En == "Classic Cotton Shirt");
+            var sofa = await context.Products.FirstOrDefaultAsync(p => p.Name.En == "Modern Leather Sofa");
+            var lamp = await context.Products.FirstOrDefaultAsync(p => p.Name.En == "Table Lamp");
+            var fictionBook = await context.Products.FirstOrDefaultAsync(p => p.Name.En == "The Great Gatsby");
+            var nonFictionBook = await context.Products.FirstOrDefaultAsync(p => p.Name.En == "Sapiens");
 
             var user1 = await context.Users.FirstOrDefaultAsync(u => u.UserName == "user1");
             var user2 = await context.Users.FirstOrDefaultAsync(u => u.UserName == "user2");
@@ -906,8 +906,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
         {
             var user1 = await context.Users.FirstOrDefaultAsync(u => u.UserName == "admin");
             var user2 = await context.Users.FirstOrDefaultAsync(u => u.UserName == "user2");
-            var iphone14Pro = await context.Products.FirstOrDefaultAsync(p => p.Name == "iPhone 14 Pro");
-            var macbookPro = await context.Products.FirstOrDefaultAsync(p => p.Name == "MacBook Pro");
+            var iphone14Pro = await context.Products.FirstOrDefaultAsync(p => p.Name.En == "iPhone 14 Pro");
+            var macbookPro = await context.Products.FirstOrDefaultAsync(p => p.Name.En == "MacBook Pro");
 
             await context.Carts.AddRangeAsync(
                 new Cart
@@ -951,8 +951,8 @@ public class DataSeeder(HStoreDbContext context, UserManager<User> userManager, 
         {
             var user1 = await context.Users.FirstOrDefaultAsync(u => u.UserName == "user1");
             var user2 = await context.Users.FirstOrDefaultAsync(u => u.UserName == "user2");
-            var iphone14Pro = await context.Products.FirstOrDefaultAsync(p => p.Name == "iPhone 14 Pro");
-            var macbookPro = await context.Products.FirstOrDefaultAsync(p => p.Name == "MacBook Pro");
+            var iphone14Pro = await context.Products.FirstOrDefaultAsync(p => p.Name.En == "iPhone 14 Pro");
+            var macbookPro = await context.Products.FirstOrDefaultAsync(p => p.Name.En == "MacBook Pro");
 
             await context.Orders.AddRangeAsync(
                 new Order
