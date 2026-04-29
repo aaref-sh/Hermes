@@ -1,54 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HStore.Domain.Classes;
 
-public class LocalizedProperty : Dictionary<string, string>
+[ComplexType]
+public class LocalizedProperty(string? ar = null, string? en = null)
 {
-    public LocalizedProperty(IDictionary<string, string> dictionary) : base(dictionary)
+    public string? Ar { get; set; } = ar;
+    public string? En { get; set; } = en;
+     
+    public LocalizedProperty() : this(null, null) { }
+    public string this[string i]
     {
-    }
-
-    public LocalizedProperty() : base()
-    {
-    }
-    public string GetByLocale(string? Locale)
-    {
-        if (string.IsNullOrWhiteSpace(Locale) || Locale.Length > 3)
-            Locale = "ar";
-
-        return this.GetValueOrDefault(Locale, "");
-    }
-
-    public override string ToString()
-    {
-        return $"{{{string.Join(", ", this.Select(x => $"{x.Key}:{x.Value}"))}}}";
-    }
-
-    public bool Contains(string search, string? lang = null)
-    {
-        if (lang != null)
+        get
         {
-            return TryGetValue(lang, out var v) && v.Contains(search, StringComparison.CurrentCultureIgnoreCase);
+            var res = i.ToLower() switch
+            {
+                "ar" => Ar,
+                _ => En
+            };
+            return res ?? Ar ?? En ?? "";
         }
-        foreach (var key in Keys)
+        set
         {
-            if (this[key].Contains(search, StringComparison.CurrentCultureIgnoreCase)) return true;
+            switch (i.ToLower())
+            {
+                case "ar":
+                    Ar = value;
+                    break;
+                case "en":
+                    En = value;
+                    break;
+                default:
+                    throw new ArgumentException("Invalid key");
+            }
         }
-        return false;
     }
 
-    public List<Dictionary<string, string>> GetTranslations()
+    public string GetByLocale(string locale)
     {
-        var translations = new List<Dictionary<string, string>>();
-
-        foreach (var prop in this)
-        {
-            translations.Add(new() { { "lang", prop.Key }, { "value", prop.Value } });
-        }
-        return translations;
+        return this[locale];
     }
+
 }

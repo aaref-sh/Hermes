@@ -169,14 +169,14 @@ namespace HStore.Infrastructure.Data.Migrations
                 nullable: false,
                 defaultValue: false);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "Search",
-                table: "AspNetRoles",
-                type: "nvarchar(256)",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
+            //migrationBuilder.AlterColumn<string>(
+            //    name: "Search",
+            //    table: "AspNetRoles",
+            //    type: "nvarchar(256)",
+            //    maxLength: 256,
+            //    nullable: true,
+            //    oldClrType: typeof(string),
+            //    oldType: "nvarchar(max)");
 
             migrationBuilder.AddColumn<string>(
                 name: "ConcurrencyStamp",
