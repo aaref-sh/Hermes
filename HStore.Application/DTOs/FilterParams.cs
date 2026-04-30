@@ -283,6 +283,16 @@ public class BaseFilter<TEntity> where TEntity : class, IBaseEntity
     [Range(1, 1000)] public int PageNumber { get; set; } = 1;
     [Range(1, 1000)] public int PageSize { get; set; } = 20;
 
+    private string _language = "en";
+    
+    /// <summary>
+    /// Sets the language for LocalizedProperty filtering/ordering (e.g., "en", "ar")
+    /// </summary>
+    public void SetLang(string lang)
+    {
+        _language = lang?.ToLower() ?? "en";
+    }
+
     /// <summary>
     /// Applies filters, ordering, and pagination to an IQueryable (SQL Server compatible)
     /// </summary>
@@ -315,9 +325,23 @@ public class BaseFilter<TEntity> where TEntity : class, IBaseEntity
             if (prop == null) continue;
 
             var parameter = Expression.Parameter(entityType, "e");
-            var propertyAccess = Expression.Property(parameter, prop);
+            
+            // Handle LocalizedProperty type - access .En or .Ar based on language
+            Expression propertyAccess;
+            if (prop.PropertyType.Name == "LocalizedProperty")
+            {
+                var localizedProp = Expression.Property(parameter, prop);
+                var langProp = _language == "ar" ? "Ar" : "En";
+                propertyAccess = Expression.Property(localizedProp, langProp);
+            }
+            else
+            {
+                propertyAccess = Expression.Property(parameter, prop);
+            }
 
-            Expression? comparison = GetComparisonExpression(propertyAccess, prop, filter.Value?.ToString(), filter.Operation.ToLower());
+            // For LocalizedProperty, use string type for comparison
+            var propType = prop.PropertyType.Name == "LocalizedProperty" ? typeof(string) : prop.PropertyType;
+            Expression? comparison = GetComparisonExpression(propertyAccess, prop, filter.Value?.ToString(), filter.Operation.ToLower(), propType);
 
             if (comparison != null)
             {
@@ -328,17 +352,17 @@ public class BaseFilter<TEntity> where TEntity : class, IBaseEntity
         return query;
     }
 
-    private Expression? GetComparisonExpression(MemberExpression propAccess, PropertyInfo propInfo, string? rawValue, string op)
+    private Expression? GetComparisonExpression(Expression propAccess, PropertyInfo propInfo, string? rawValue, string op, Type propType)
     {
         try
         {
             // Handle List-based operations (IN, NOT IN)
             if (op is "in" or "nin" or "notin")
             {
-                var values = rawValue?.Trim('[', ']').Split(',').Select(v => Convert.ChangeType(v.Trim(), propInfo.PropertyType)).ToList();
+                var values = rawValue?.Trim('[', ']').Split(',').Select(v => Convert.ChangeType(v.Trim(), propType)).ToList();
                 if (values == null) return null;
 
-                var listType = typeof(List<>).MakeGenericType(propInfo.PropertyType);
+                var listType = typeof(List<>).MakeGenericType(propType);
                 var containsMethod = listType.GetMethod("Contains");
                 var listConstant = Expression.Constant(values);
 
@@ -348,12 +372,12 @@ public class BaseFilter<TEntity> where TEntity : class, IBaseEntity
 
             // Handle Scalar operations
             object? convertedValue = null;
-            var targetType = Nullable.GetUnderlyingType(propInfo.PropertyType) ?? propInfo.PropertyType;
+            var targetType = Nullable.GetUnderlyingType(propType) ?? propType;
 
             if (rawValue != null)
                 convertedValue = targetType.IsEnum ? Enum.Parse(targetType, rawValue) : Convert.ChangeType(rawValue, targetType);
 
-            var constant = Expression.Constant(convertedValue, propInfo.PropertyType);
+            var constant = Expression.Constant(convertedValue, propType);
 
             return op switch
             {
@@ -384,7 +408,20 @@ public class BaseFilter<TEntity> where TEntity : class, IBaseEntity
             if (prop == null) continue;
 
             var parameter = Expression.Parameter(entityType, "o");
-            var propertyAccess = Expression.Property(parameter, prop);
+            
+            // Handle LocalizedProperty type - access .En or .Ar based on language
+            Expression propertyAccess;
+            if (prop.PropertyType.Name == "LocalizedProperty")
+            {
+                var localizedProp = Expression.Property(parameter, prop);
+                var langProp = _language == "ar" ? "Ar" : "En";
+                propertyAccess = Expression.Property(localizedProp, langProp);
+            }
+            else
+            {
+                propertyAccess = Expression.Property(parameter, prop);
+            }
+            
             var conversion = Expression.Convert(propertyAccess, typeof(object));
             var lambda = Expression.Lambda<Func<TEntity, object>>(conversion, parameter);
 
