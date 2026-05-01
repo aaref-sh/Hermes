@@ -33,6 +33,11 @@ public class PaymentsController(
             return BadRequest("Order is not in a pending state.");
         }
 
+        if (order.PaymentMethod == PaymentMethodType.PayOnDelivery)
+        {
+            return BadRequest("Online payment is not available for Pay-on-Delivery orders.");
+        }
+
         try
         {
             var checkoutSessionDto = new CreateCheckoutSessionDto
@@ -83,6 +88,11 @@ public class PaymentsController(
         if (order.OrderStatus != OrderStatus.Pending)
         {
             return BadRequest("Order is not in a pending state.");
+        }
+
+        if (order.PaymentMethod == PaymentMethodType.PayOnDelivery)
+        {
+            return BadRequest("Online payment is not available for Pay-on-Delivery orders.");
         }
 
         try

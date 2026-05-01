@@ -1,4 +1,4 @@
-﻿using HStore.Domain.Enums;
+﻿﻿using HStore.Domain.Enums;
 
 namespace HStore.Application.DTOs;
 
@@ -17,4 +17,9 @@ public class OrderDto
     public PaymentMethodType PaymentMethod { get; set; }
     public string PaymentIntentId { get; set; }
     public string CheckoutSessionId { get; set; }
+    
+    // Pay-on-Delivery (COD) tracking properties
+    public bool IsCodCollected { get; set; }
+    public DateTime? CodCollectionDate { get; set; }
+    public decimal? CodFee { get; set; }
 }

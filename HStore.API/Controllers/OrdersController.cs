@@ -110,9 +110,9 @@ public class OrdersController(IOrderService orderService) : ControllerBaseEx
         return BadRequest($"Failed to delete order with ID {id}.");
     }
 
-    [AuthorizeMiddleware(["Admin", "Seller"])]
+[AuthorizeMiddleware(["Admin", "Seller"])]
     [HttpPost("{id:int}/collect-cod")]
-    public async Task<IActionResult> CollectCodPayment(int id)
+    public async Task<IActionResult> CollectCodPayment(int id, [FromQuery] decimal? codFee = null)
     {
         var order = await orderService.GetOrderByIdAsync(id);
         if (order == null)
@@ -125,12 +125,17 @@ public class OrdersController(IOrderService orderService) : ControllerBaseEx
             return BadRequest("This order is not paid on delivery.");
         }
 
-        if (order.OrderStatus != OrderStatus.Shipped && order.OrderStatus != OrderStatus.Delivered)
+        if (order.IsCodCollected)
         {
-            return BadRequest("COD payment can only be collected after the order is shipped or delivered.");
+            return BadRequest("COD payment has already been collected for this order.");
         }
 
-        await orderService.UpdateOrderStatusAsync(id, OrderStatus.Paid, "COD payment collected.");
-        return Ok(new { Message = "COD payment collected successfully." });
+        var success = await orderService.CollectCodPaymentAsync(id, codFee);
+        if (!success)
+        {
+            return BadRequest($"Failed to collect COD payment for order with ID {id}.");
+        }
+
+        return Ok(new { Message = "COD payment collected successfully.", IsCodCollected = true, CodFee = codFee });
     }
 }

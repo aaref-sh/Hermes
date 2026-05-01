@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿﻿﻿﻿﻿﻿﻿﻿using AutoMapper;
 using HStore.Application.DTOs;
 using HStore.Application.Exceptions;
 using HStore.Application.Interfaces;
@@ -63,8 +63,10 @@ public class OrderService(
             ShippingAddress = orderDto.ShippingAddress,
             BillingAddress = orderDto.BillingAddress,
             OrderItems = orderDto.OrderItems,
-            TotalAmount = totalAmount,
+            TotalAmount = totalAmount + (orderDto.PaymentMethod == PaymentMethodType.PayOnDelivery ? orderDto.CodFee ?? 0 : 0),
             UserId = orderDto.UserId,
+            PaymentMethod = orderDto.PaymentMethod,
+            CodFee = orderDto.CodFee,
             AvailableShippingRates = availableShippingRates
         };
     }
@@ -122,13 +124,13 @@ public class OrderService(
             var order = new Order
             {
                 OrderDate = DateTime.UtcNow,
-                OrderStatus = orderDto.PaymentMethod == PaymentMethodType.PayOnDelivery 
-                    ? OrderStatus.Paid 
-                    : OrderStatus.Pending,
+                OrderStatus = OrderStatus.Pending,
                 PaymentMethod = orderDto.PaymentMethod,
+                CodFee = orderDto.CodFee,
+
                 ShippingAddress = mapper.Map<Address>(orderDto.ShippingAddress),
                 BillingAddress = mapper.Map<Address>(orderDto.BillingAddress),
-                TotalAmount = cart.TotalPrice + selectedShippingRate.TotalRate,
+                TotalAmount = cart.TotalPrice + selectedShippingRate.TotalRate + (orderDto.PaymentMethod == PaymentMethodType.PayOnDelivery ? orderDto.CodFee ?? 0 : 0),
                 UserId = orderDto.UserId,
                 Currency = orderDto.Currency
             };
@@ -148,18 +150,16 @@ public class OrderService(
             }
 
             await unitOfWork.Orders.AddAsync(order);
-            var initialStatus = orderDto.PaymentMethod == PaymentMethodType.PayOnDelivery 
-                ? OrderStatus.Paid 
-                : OrderStatus.Pending;
             var orderHistory = new OrderHistory
             {
                 OrderId = order.Id,
                 PreviousStatus = OrderStatus.Pending,
-                NewStatus = initialStatus,
+                NewStatus = OrderStatus.Pending,
                 Notes = orderDto.PaymentMethod == PaymentMethodType.PayOnDelivery 
-                    ? "Order created with Pay on Delivery payment." 
+                    ? "Order created with Pay on Delivery payment method." 
                     : "Order created."
             };
+
 
             await unitOfWork.OrderHistory.AddAsync(orderHistory);
 
@@ -274,9 +274,10 @@ public class OrderService(
             if (order == null)
                 throw new NotFoundException($"Order with ID {orderId} not found.");
 
-            if (!IsValidStatusTransition(order.OrderStatus, newStatus))
+            if (!IsValidStatusTransition(order.OrderStatus, newStatus, order.PaymentMethod))
                 throw new BadRequestException(
                     $"Invalid order status transition from {order.OrderStatus} to {newStatus}.");
+
 
             var orderHistory = new OrderHistory
             {
@@ -336,12 +337,12 @@ public class OrderService(
             };
             await unitOfWork.OrderHistory.AddAsync(orderHistory);
 
-            order.OrderStatus = OrderStatus.Cancelled;
-            await unitOfWork.Orders.UpdateAsync(order);
-
             // Capture the payment method and status before cancellation for refund check
             var paymentMethod = order.PaymentMethod;
             var statusBeforeCancellation = order.OrderStatus;
+
+            order.OrderStatus = OrderStatus.Cancelled;
+            await unitOfWork.Orders.UpdateAsync(order);
 
             foreach (var orderItem in order.OrderItems)
             {
@@ -410,20 +411,86 @@ public class OrderService(
     /// </summary>
     /// <param name="currentStatus">Current order status</param>
     /// <param name="newStatus">New order status</param>
+    /// <param name="paymentMethod">The payment method used for the order</param>
     /// <returns></returns>
-    private bool IsValidStatusTransition(OrderStatus currentStatus, OrderStatus newStatus)
+    private bool IsValidStatusTransition(OrderStatus currentStatus, OrderStatus newStatus, PaymentMethodType paymentMethod)
     {
         return currentStatus switch
         {
-            OrderStatus.Pending => newStatus is OrderStatus.Paid or OrderStatus.Cancelled,
-            // Allow Paid -> Processing for both online payments (after Stripe webhook) and COD (after collection)
+            // Pending: can go to Paid (online payment confirmed), Processing (COD starts fulfillment), or Cancelled
+            OrderStatus.Pending => paymentMethod == PaymentMethodType.PayOnDelivery
+                ? newStatus is OrderStatus.Processing or OrderStatus.Cancelled
+                : newStatus is OrderStatus.Paid or OrderStatus.Cancelled,
+            // Paid: can go to Processing (fulfillment) or Cancelled
             OrderStatus.Paid => newStatus is OrderStatus.Processing or OrderStatus.Cancelled,
+            // Processing: can go to Shipped or Cancelled
             OrderStatus.Processing => newStatus is OrderStatus.Shipped or OrderStatus.Cancelled,
-            OrderStatus.Shipped => newStatus == OrderStatus.Delivered,
+            // Shipped: can go to Delivered, or to Paid (COD payment collection), or Cancelled
+            OrderStatus.Shipped => paymentMethod == PaymentMethodType.PayOnDelivery
+                ? newStatus is OrderStatus.Delivered or OrderStatus.Paid or OrderStatus.Cancelled
+                : newStatus == OrderStatus.Delivered,
+            // Delivered: can go to Paid (COD payment collection if not already paid)
+            OrderStatus.Delivered => paymentMethod == PaymentMethodType.PayOnDelivery && newStatus == OrderStatus.Paid,
             _ => false
         };
     }
+
     
+/// <summary>
+    /// Collects payment for a Pay-on-Delivery (COD) order.
+    /// </summary>
+    /// <param name="orderId">The ID of the order to collect payment for.</param>
+    /// <param name="codFee">Optional COD fee amount.</param>
+    /// <returns>True if the payment was successfully collected, false otherwise.</returns>
+    public async Task<bool> CollectCodPaymentAsync(int orderId, decimal? codFee = null)
+    {
+        await unitOfWork.BeginTransactionAsync();
+        try
+        {
+            var order = await unitOfWork.Orders.GetOrderDetailsAsync(orderId);
+            if (order == null)
+                throw new NotFoundException($"Order with ID {orderId} not found.");
+
+            if (order.PaymentMethod != PaymentMethodType.PayOnDelivery)
+                throw new BadRequestException("This order is not paid on delivery.");
+
+            // Check if payment has already been collected
+            if (order.IsCodCollected)
+                throw new BadRequestException("COD payment has already been collected for this order.");
+
+            // Capture previous status before updating
+            var previousStatus = order.OrderStatus;
+
+            // Update order with COD collection details
+            order.IsCodCollected = true;
+            order.CodCollectionDate = DateTime.UtcNow;
+            order.CodFee = codFee;
+            order.OrderStatus = OrderStatus.Paid;
+
+            var orderHistory = new OrderHistory
+            {
+                OrderId = order.Id,
+                PreviousStatus = previousStatus,
+                NewStatus = OrderStatus.Paid,
+                Notes = $"COD payment collected. Fee: {codFee}"
+            };
+            await unitOfWork.OrderHistory.AddAsync(orderHistory);
+
+            await unitOfWork.Orders.UpdateAsync(order);
+            await unitOfWork.CommitTransactionAsync();
+
+            var updatedOrder = mapper.Map<OrderDto>(order);
+            await emailService.SendOrderConfirmationEmailAsync(updatedOrder);
+
+            return true;
+        }
+        catch (Exception)
+        {
+            await unitOfWork.RollbackTransactionAsync();
+            throw new BadRequestException($"An error occurred while collecting COD payment for order with ID {orderId}.");
+        }
+    }
+
     /// <summary>
     /// Gets the warehouse address
     /// </summary>
@@ -434,7 +501,7 @@ public class OrderService(
         {
             Street = warehouseAddressSettings.Value.Street,
             City = warehouseAddressSettings.Value.City,
-            State =warehouseAddressSettings.Value.State,
+            State = warehouseAddressSettings.Value.State,
             Country = warehouseAddressSettings.Value.Country,
             PostalCode = warehouseAddressSettings.Value.PostalCode
         };

@@ -31,7 +31,10 @@ public class MappingProfile : Profile
         CreateMap<Order, OrderDto>()
             .ForMember(dest => dest.ShippingAddress, opt => opt.MapFrom(src => src.ShippingAddress))
             .ForMember(dest => dest.BillingAddress, opt => opt.MapFrom(src => src.BillingAddress))
-            .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.PaymentMethod));
+            .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.PaymentMethod))
+            .ForMember(dest => dest.IsCodCollected, opt => opt.MapFrom(src => src.IsCodCollected))
+            .ForMember(dest => dest.CodCollectionDate, opt => opt.MapFrom(src => src.CodCollectionDate))
+            .ForMember(dest => dest.CodFee, opt => opt.MapFrom(src => src.CodFee));
 
         CreateMap<OrderItem, OrderItemDto>().ReverseMap();
         CreateMap<CreateOrderDto, Order>()

@@ -74,4 +74,12 @@ public interface IOrderService
     /// <param name="orderId">The ID of the order to delete.</param>
     /// <returns>True if the order was successfully deleted, false otherwise.</returns>
     Task<bool> DeleteOrderAsync(int orderId);
+
+    /// <summary>
+    /// Collects payment for a Pay-on-Delivery (COD) order.
+    /// </summary>
+    /// <param name="orderId">The ID of the order to collect payment for.</param>
+    /// <param name="codFee">Optional COD fee amount.</param>
+    /// <returns>True if the payment was successfully collected, false otherwise.</returns>
+    Task<bool> CollectCodPaymentAsync(int orderId, decimal? codFee = null);
 }

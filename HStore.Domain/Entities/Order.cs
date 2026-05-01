@@ -1,4 +1,4 @@
-﻿using HStore.Domain.Enums;
+﻿﻿using HStore.Domain.Enums;
 
 namespace HStore.Domain.Entities;
 
@@ -17,6 +17,11 @@ public class Order : BaseEntity
     public PaymentMethodType PaymentMethod { get; set; }
     public string? PaymentIntentId { get; set; }
     public string? CheckoutSessionId { get; set; }
+
+    // COD (Pay-on-Delivery) specific properties
+    public bool IsCodCollected { get; set; }
+    public DateTime? CodCollectionDate { get; set; }
+    public decimal? CodFee { get; set; }
 
     // Navigation Properties
     public int UserId { get; set; }
