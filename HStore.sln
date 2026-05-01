@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.6.11709.129 insiders
+VisualStudioVersion = 18.6.11709.129
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HStore.API", "HStore.API\HStore.API.csproj", "{4D98A33E-AA6D-4249-85E8-B43C5A7F32AF}"
 EndProject
@@ -10,8 +10,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HStore.Infrastructure", "HStore.Infrastructure\HStore.Infrastructure.csproj", "{D45F5400-025B-4BA5-9B11-8407AA22CE44}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HStore.Application", "HStore.Application\HStore.Application.csproj", "{93FB797C-69C9-49C2-8162-3D6F78E81A84}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HStore.API.Tests.Integration", "HStore.API.Tests.Integration\HStore.API.Tests.Integration.csproj", "{1177FA28-9911-4798-91E1-171E2255D9AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,12 +33,11 @@ Global
 		{93FB797C-69C9-49C2-8162-3D6F78E81A84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93FB797C-69C9-49C2-8162-3D6F78E81A84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93FB797C-69C9-49C2-8162-3D6F78E81A84}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1177FA28-9911-4798-91E1-171E2255D9AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1177FA28-9911-4798-91E1-171E2255D9AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1177FA28-9911-4798-91E1-171E2255D9AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1177FA28-9911-4798-91E1-171E2255D9AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3805C1ED-C168-431A-864F-73952F8A0E4E}
 	EndGlobalSection
 EndGlobal

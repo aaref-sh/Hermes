@@ -122,7 +122,10 @@ public class OrderService(
             var order = new Order
             {
                 OrderDate = DateTime.UtcNow,
-                OrderStatus = OrderStatus.Pending,
+                OrderStatus = orderDto.PaymentMethod == PaymentMethodType.PayOnDelivery 
+                    ? OrderStatus.Paid 
+                    : OrderStatus.Pending,
+                PaymentMethod = orderDto.PaymentMethod,
                 ShippingAddress = mapper.Map<Address>(orderDto.ShippingAddress),
                 BillingAddress = mapper.Map<Address>(orderDto.BillingAddress),
                 TotalAmount = cart.TotalPrice + selectedShippingRate.TotalRate,
@@ -145,12 +148,17 @@ public class OrderService(
             }
 
             await unitOfWork.Orders.AddAsync(order);
+            var initialStatus = orderDto.PaymentMethod == PaymentMethodType.PayOnDelivery 
+                ? OrderStatus.Paid 
+                : OrderStatus.Pending;
             var orderHistory = new OrderHistory
             {
                 OrderId = order.Id,
                 PreviousStatus = OrderStatus.Pending,
-                NewStatus = OrderStatus.Pending,
-                Notes = "Order created."
+                NewStatus = initialStatus,
+                Notes = orderDto.PaymentMethod == PaymentMethodType.PayOnDelivery 
+                    ? "Order created with Pay on Delivery payment." 
+                    : "Order created."
             };
 
             await unitOfWork.OrderHistory.AddAsync(orderHistory);
@@ -331,12 +339,17 @@ public class OrderService(
             order.OrderStatus = OrderStatus.Cancelled;
             await unitOfWork.Orders.UpdateAsync(order);
 
+            // Capture the payment method and status before cancellation for refund check
+            var paymentMethod = order.PaymentMethod;
+            var statusBeforeCancellation = order.OrderStatus;
+
             foreach (var orderItem in order.OrderItems)
             {
                 await inventoryService.ReleaseStockAsync(orderItem.ProductId, orderItem.Quantity);
             }
 
-            if (order.OrderStatus is OrderStatus.Pending or OrderStatus.Paid)
+            // Only refund if paid via Card and status was Pending or Paid (not for PayOnDelivery)
+            if (paymentMethod == PaymentMethodType.Card && statusBeforeCancellation is OrderStatus.Pending or OrderStatus.Paid)
             {
                 var refundDto = new CreateRefundDto
                 {
@@ -403,6 +416,7 @@ public class OrderService(
         return currentStatus switch
         {
             OrderStatus.Pending => newStatus is OrderStatus.Paid or OrderStatus.Cancelled,
+            // Allow Paid -> Processing for both online payments (after Stripe webhook) and COD (after collection)
             OrderStatus.Paid => newStatus is OrderStatus.Processing or OrderStatus.Cancelled,
             OrderStatus.Processing => newStatus is OrderStatus.Shipped or OrderStatus.Cancelled,
             OrderStatus.Shipped => newStatus == OrderStatus.Delivered,

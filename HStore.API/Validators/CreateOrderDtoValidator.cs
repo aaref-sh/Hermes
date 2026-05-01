@@ -16,6 +16,10 @@ public class CreateOrderDtoValidator : AbstractValidator<CreateOrderDto>
             .SetValidator(new AddressDtoValidator()); 
 
         RuleFor(x => x.PaymentMethod)
+            .IsInEnum()
+            .WithMessage("Invalid payment method. Valid values are: Card (0), PayOnDelivery (1), Wallet (2).");
+
+        RuleFor(x => x.PaymentMethod)
             .NotEmpty().WithMessage("Payment method is required.");
 
         RuleForEach(x => x.OrderItems)

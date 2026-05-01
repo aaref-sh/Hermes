@@ -1,4 +1,6 @@
-﻿namespace HStore.Application.DTOs;
+﻿using HStore.Domain.Enums;
+
+namespace HStore.Application.DTOs;
 
 public class CreateOrderDto
 {
@@ -6,7 +8,7 @@ public class CreateOrderDto
     public AddressDto ShippingAddress { get; set; }
     public AddressDto BillingAddress { get; set; }
     public string Currency { get; set; } = "USD";
-    public string PaymentMethod { get; set; }
+    public PaymentMethodType PaymentMethod { get; set; }
     public string ShippingMethod { get; set; }
     public string CouponCode { get; set; }
     public List<OrderItemDto> OrderItems { get; set; } = [];

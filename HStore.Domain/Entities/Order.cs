@@ -14,6 +14,7 @@ public class Order : BaseEntity
     public decimal? DiscountedAmount { get; set; }
     public string? AppliedCouponCode { get; set; }
 
+    public PaymentMethodType PaymentMethod { get; set; }
     public string? PaymentIntentId { get; set; }
     public string? CheckoutSessionId { get; set; }
 

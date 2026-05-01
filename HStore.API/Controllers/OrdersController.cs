@@ -31,7 +31,7 @@ public class OrdersController(IOrderService orderService) : ControllerBaseEx
             return BadRequest("Order must contain at least one item.");
         }
 
-        if (string.IsNullOrEmpty(orderDto.PaymentMethod))
+        if (orderDto.PaymentMethod == default)
         {
             return BadRequest("Payment method is required.");
         }
@@ -108,5 +108,29 @@ public class OrdersController(IOrderService orderService) : ControllerBaseEx
         }
 
         return BadRequest($"Failed to delete order with ID {id}.");
+    }
+
+    [AuthorizeMiddleware(["Admin", "Seller"])]
+    [HttpPost("{id:int}/collect-cod")]
+    public async Task<IActionResult> CollectCodPayment(int id)
+    {
+        var order = await orderService.GetOrderByIdAsync(id);
+        if (order == null)
+        {
+            return NotFound($"Order with ID {id} not found.");
+        }
+
+        if (order.PaymentMethod != PaymentMethodType.PayOnDelivery)
+        {
+            return BadRequest("This order is not paid on delivery.");
+        }
+
+        if (order.OrderStatus != OrderStatus.Shipped && order.OrderStatus != OrderStatus.Delivered)
+        {
+            return BadRequest("COD payment can only be collected after the order is shipped or delivered.");
+        }
+
+        await orderService.UpdateOrderStatusAsync(id, OrderStatus.Paid, "COD payment collected.");
+        return Ok(new { Message = "COD payment collected successfully." });
     }
 }

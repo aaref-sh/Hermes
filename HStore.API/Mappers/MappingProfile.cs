@@ -30,12 +30,14 @@ public class MappingProfile : Profile
         // Order Mappings
         CreateMap<Order, OrderDto>()
             .ForMember(dest => dest.ShippingAddress, opt => opt.MapFrom(src => src.ShippingAddress))
-            .ForMember(dest => dest.BillingAddress, opt => opt.MapFrom(src => src.BillingAddress));
+            .ForMember(dest => dest.BillingAddress, opt => opt.MapFrom(src => src.BillingAddress))
+            .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.PaymentMethod));
 
         CreateMap<OrderItem, OrderItemDto>().ReverseMap();
         CreateMap<CreateOrderDto, Order>()
             .ForMember(dest => dest.ShippingAddress, opt => opt.MapFrom(src => src.ShippingAddress))
-            .ForMember(dest => dest.BillingAddress, opt => opt.MapFrom(src => src.BillingAddress));
+            .ForMember(dest => dest.BillingAddress, opt => opt.MapFrom(src => src.BillingAddress))
+            .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.PaymentMethod));
 
         // Product Mappings
         CreateMap<Product, ProductDto>()
