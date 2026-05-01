@@ -12,13 +12,6 @@ namespace HStore.API.Utilities;
 
 public static class ServiceExtensions
 {
-    public static IApplicationBuilder ApplyMigrations(this IApplicationBuilder app)
-    {
-        using var scope = app.ApplicationServices.CreateScope();
-        using var db = scope.ServiceProvider.GetRequiredService<HStoreDbContext>();
-        db.Database.Migrate();
-        return app;
-    }
     /// <summary>
     /// Adds repositories to the service collection.
     /// </summary>
